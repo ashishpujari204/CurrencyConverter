@@ -11,8 +11,13 @@ interface ApiInterface {
 
     @GET("latest/{base}")
     fun getData(
-        @Path("base") userId: String?
+        @Path("base") base: String?
     ): Call<JsonObject>
+
+    /* @GET("latest")
+     fun getData(
+         @Query("base") base: String
+     ): Call<JsonObject>*/
 
 
 }

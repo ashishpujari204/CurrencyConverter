@@ -41,7 +41,7 @@ class CurrencyCodeList : BaseActivity() {
                 var fromObject =
                     rateAPICodeArray.find { it.code == currencyMockArrayList[position].code }
                 if (fromObject != null) {
-                    showToast(fromObject.code)
+
                     val result = Intent()
                     result.putExtra("OBJECT", fromObject)
                     setResult(Activity.RESULT_OK, result)

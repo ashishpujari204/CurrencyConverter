@@ -25,7 +25,6 @@
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="10dp"
-                android:layout_toRightOf="@+id/backToHome"
                 android:text="@string/title"
                 android:fontFamily="@font/google_sans_regular"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
@@ -137,7 +136,6 @@
             android:gravity="center_horizontal"
             android:digits="0123456789."
             android:inputType="numberDecimal"
-            android:hint="@string/inr_amount"
             android:textColorHint="@color/faint_read"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
             />

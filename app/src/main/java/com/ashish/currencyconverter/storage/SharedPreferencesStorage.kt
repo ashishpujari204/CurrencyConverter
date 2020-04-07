@@ -17,6 +17,6 @@ class SharedPreferencesStorage(context: Context) : Storage {
     }
 
     override fun getString(key: String): String {
-        return sharedPreferences.getString(key, "")!!
+        return sharedPreferences.getString(key, "NA")!!
     }
 }

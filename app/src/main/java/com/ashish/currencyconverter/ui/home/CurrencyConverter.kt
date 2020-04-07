@@ -8,9 +8,11 @@ import android.text.TextWatcher
 import android.widget.EditText
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProviders.*
 import com.ashish.currencyconverter.R
 import com.ashish.currencyconverter.baseclasses.BaseActivity
 import com.ashish.currencyconverter.ui.codelist.CurrencyCodeList
+import com.ashish.currencyconverter.util.Constants
 import com.ashish.currencyconverter.util.Constants.Companion.CONVERSATION_RATES
 import com.ashish.currencyconverter.util.Constants.Companion.DEFAULT_VALUE
 import com.ashish.currencyconverter.util.Constants.Companion.RESULT
@@ -19,6 +21,8 @@ import com.ashish.currencyconverter.util.NavigationUtil
 import com.ashish.currencyconverter.util.Util
 import kotlinx.android.synthetic.main.activity_currency_converter.*
 import org.json.JSONObject
+import java.lang.NullPointerException
+import java.lang.NumberFormatException
 
 
 class CurrencyConverter : BaseActivity() {
@@ -37,22 +41,30 @@ class CurrencyConverter : BaseActivity() {
         setContentView(R.layout.activity_currency_converter)
         currencyArrayList = ArrayList()
         rateCodeArray = ArrayList()
-        currencyViewModel =
-            ViewModelProviders.of(this@CurrencyConverter).get(CurrencyViewModel::class.java)
+        currencyViewModel = ViewModelProviders.of(this@CurrencyConverter).get(CurrencyViewModel::class.java)
         tvFromInput = findViewById(R.id.tvFromInput)
         loadCurrencyCode()
+        var from=Constants.getFromCode(this@CurrencyConverter)
+        var to=Constants.getToCode(this@CurrencyConverter)
 
         if (Util.verifyAvailableNetwork(this@CurrencyConverter)) {
-            getData("INR", "USD")
+            if(from=="NA" && to=="NA") {
+                Constants.saveFromCode(this@CurrencyConverter,"INR")
+                Constants.saveToCode(this@CurrencyConverter,"USD")
+                getData("INR", "USD")
+            }else{
+                getData(from, to)
+            }
         } else {
-            showToast(resources.getString(R.string.network_connection))
-            finish()
+            rateCodeArray.addAll(currencyViewModel.getCode())
+            getData(from, to)
         }
 
 
         currencySwipeButton.setOnClickListener {
-            //setDefaultDataToView(tvToCode.text.toString(),tvFromCode.text.toString())
             getData(tvToCode.text.toString(), tvFromCode.text.toString())
+            Constants.saveFromCode(this@CurrencyConverter,tvToCode.text.toString())
+            Constants.saveToCode(this@CurrencyConverter,tvFromCode.text.toString())
         }
         setupCalculation()
         setupNavigation()
@@ -71,9 +83,14 @@ class CurrencyConverter : BaseActivity() {
                 s: CharSequence, start: Int,
                 before: Int, count: Int
             ) {
-                if (s != null && s.isNotEmpty() && rateCodeArray.isNotEmpty()) {
-                    var calculatedAmount = s.toString().toDouble() * getToCurrencyObject()?.rate!!
-                    tvToInput.text = "" + Util.roundOffDecimal(calculatedAmount)
+                try {
+                    if (s != null && s.isNotEmpty() && rateCodeArray.isNotEmpty()) {
+                        var calculatedAmount =
+                            s.toString().toDouble() * getToCurrencyObject()?.rate!!
+                        tvToInput.text = "" + Util.roundOffDecimal(calculatedAmount)
+                    }
+                }catch (e : NumberFormatException){
+                    logError(e.toString())
                 }
             }
         })
@@ -81,12 +98,16 @@ class CurrencyConverter : BaseActivity() {
 
     private fun setupNavigation() {
         lyFromCurrencySelection.setOnClickListener {
-            NavigationUtil.pickCurrencyCode(
-                this@CurrencyConverter,
-                currencyArrayList,
-                rateCodeArray,
-                FROM_CURRENCY_INPUT
-            )
+            if (Util.verifyAvailableNetwork(this@CurrencyConverter)) {
+                NavigationUtil.pickCurrencyCode(
+                    this@CurrencyConverter,
+                    currencyArrayList,
+                    rateCodeArray,
+                    FROM_CURRENCY_INPUT
+                )
+            }else{
+                showToast(resources.getString(R.string.network_connection))
+            }
         }
         lyToCurrencySelection.setOnClickListener {
             NavigationUtil.pickCurrencyCode(
@@ -132,21 +153,23 @@ class CurrencyConverter : BaseActivity() {
      * parse api response
      */
     private fun parseData(it: String, fromCode: String, toCode: String) {
-        logError(it)
+
         var jsonObject = JSONObject(it)
         if (jsonObject.optString(RESULT, DEFAULT_VALUE) == SUCCESS) {
+            currencyViewModel.delete()
+
             var rateObject = jsonObject.getJSONObject(CONVERSATION_RATES)
             var keys = rateObject.keys()
-            currencyViewModel.delete()
-            while (keys.hasNext()) {
 
+            while (keys.hasNext()) {
                 var keyValue = keys.next()
                 var rateCodeObject = RateClass(0, keyValue, rateObject.optDouble(keyValue, 0.0))
-                currencyViewModel.insert(rateCodeObject)
+                //currencyViewModel.insert(rateCodeObject)
+                rateCodeArray.add(rateCodeObject)
             }
         }
 
-        rateCodeArray.addAll(currencyViewModel.getCode())
+       // rateCodeArray.addAll(currencyViewModel.getCode())
 
         setDefaultDataToView(fromCode, toCode)
     }
@@ -172,7 +195,9 @@ class CurrencyConverter : BaseActivity() {
             if (resultCode == Activity.RESULT_OK) {
                 val rate = data?.getParcelableExtra<RateClass>("OBJECT")
                 rate?.let {
-                    getData(rate.code, tvFromCode.text.toString())
+                    Constants.saveFromCode(this@CurrencyConverter,rate.code)
+                    getData(rate.code, tvToCode.text.toString())
+
                 }
             }
         }
@@ -180,6 +205,7 @@ class CurrencyConverter : BaseActivity() {
             if (resultCode == Activity.RESULT_OK) {
                 val rate = data?.getParcelableExtra<RateClass>("OBJECT")
                 rate?.let {
+                    Constants.saveToCode(this@CurrencyConverter,rate.code)
                     setDefaultDataToView(tvFromCode.text.toString(), rate.code)
                 }
             }

@@ -44,8 +44,8 @@ class CurrencyViewModel(application: Application) : AndroidViewModel(application
     }
     fun getCurrencyData(base : String): MutableLiveData<String> {
         var userData = MutableLiveData<String>()
-        val dataCall: Call<JsonObject> =
-            ApiClient.getClient.getData(base)
+       // val dataCall: Call<JsonObject> = ApiClient.getClient.getData(base)
+        val dataCall: Call<JsonObject> = ApiClient.getClient.getData(base)
         dataCall!!.enqueue(object : Callback<JsonObject> {
             override fun onResponse(call: Call<JsonObject>, response: Response<JsonObject>) {
 
