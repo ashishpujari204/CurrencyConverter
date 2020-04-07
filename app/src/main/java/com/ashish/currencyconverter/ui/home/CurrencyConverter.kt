@@ -29,6 +29,7 @@ class CurrencyConverter : BaseActivity() {
 
     lateinit var currencyArrayList: ArrayList<CurrencyClass>
     lateinit var rateCodeArray: ArrayList<RateClass>
+    lateinit var rateCodeArrayFromDB: ArrayList<RateClass>
     lateinit var currencyViewModel: CurrencyViewModel
     lateinit var tvFromInput: EditText
 
@@ -41,6 +42,7 @@ class CurrencyConverter : BaseActivity() {
         setContentView(R.layout.activity_currency_converter)
         currencyArrayList = ArrayList()
         rateCodeArray = ArrayList()
+        rateCodeArrayFromDB = ArrayList()
         currencyViewModel = ViewModelProviders.of(this@CurrencyConverter).get(CurrencyViewModel::class.java)
         tvFromInput = findViewById(R.id.tvFromInput)
         loadCurrencyCode()
@@ -164,12 +166,13 @@ class CurrencyConverter : BaseActivity() {
             while (keys.hasNext()) {
                 var keyValue = keys.next()
                 var rateCodeObject = RateClass(0, keyValue, rateObject.optDouble(keyValue, 0.0))
-                //currencyViewModel.insert(rateCodeObject)
+
                 rateCodeArray.add(rateCodeObject)
             }
+            currencyViewModel.insert(rateCodeArray)
         }
 
-       // rateCodeArray.addAll(currencyViewModel.getCode())
+        rateCodeArrayFromDB.addAll(currencyViewModel.getCode())
 
         setDefaultDataToView(fromCode, toCode)
     }
@@ -178,9 +181,6 @@ class CurrencyConverter : BaseActivity() {
         return rateCodeArray.find { it.code == tvToCode.text }
     }
 
-    private fun getFromCurrencyObject(): RateClass? {
-        return rateCodeArray.find { it.code == tvFromCode.text }
-    }
 
     /**
      * parsing mock country and code data here for show purpose

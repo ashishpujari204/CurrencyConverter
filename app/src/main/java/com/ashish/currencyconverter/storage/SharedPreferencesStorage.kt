@@ -2,7 +2,6 @@ package com.ashish.currencyconverter.storage
 
 
 import android.content.Context
-import com.app.smartprocessors.storage.Storage
 import com.ashish.currencyconverter.util.Constants
 
 class SharedPreferencesStorage(context: Context) : Storage {

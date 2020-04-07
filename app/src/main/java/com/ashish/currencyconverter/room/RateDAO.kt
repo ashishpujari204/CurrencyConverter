@@ -12,8 +12,9 @@ interface RateDAO {
     @Query("SELECT * from currency ORDER BY code ASC")
     fun getCodes(): List<RateClass>
 
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun insertCode(rateObject: RateClass)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @JvmSuppressWildcards
+    suspend fun insertCode(list: ArrayList<RateClass>)
 
     @Query("DELETE FROM currency")
     suspend fun deleteAll()

@@ -35,7 +35,7 @@ class CurrencyViewModel(application: Application) : AndroidViewModel(application
     /**
      * Launching a new coroutine to insert the data in a non-blocking way
      */
-    fun insert(rate: RateClass) = viewModelScope.launch(Dispatchers.IO) {
+    fun insert(rate: ArrayList<RateClass>) = viewModelScope.launch(Dispatchers.IO) {
         repository.insert(rate)
     }
 

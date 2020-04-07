@@ -1,14 +1,11 @@
 <resources>
     <string name="app_name">CurrencyConverter</string>
-    <string name="text_amount">Amount</string>
-    <string name="from">From</string>
     <string name="usd">USD</string>
     <string name="inr">INR</string>
     <string name="inr_amount">76.33</string>
     <string name="usd_amount">1</string>
     <string name="title">Currency Converter</string>
     <string name="title_code">Select Currency</string>
-    <string name="to">To</string>
     <string name="error_message">Currency details not found</string>
     <string name="selection_message">API not support selected currency code</string>
     <string name="network_connection">Please check internet connection</string>

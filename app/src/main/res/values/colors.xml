@@ -7,18 +7,6 @@
 
     <!--#F57C00 -->
     <color name="white">#ffffff</color>
-    <color name="black">#000000</color>
-    <color name="sky">#4285F4</color>
-    <color name="red">#ff0000</color>
-    <color name="semi_grey">#9E9E9E</color>
-    <color name="light_grey">#DCDCDC</color>
-    <color name="green">#00ff00</color>
-    <color name="faint_orange">#FFE082</color>
-    <color name="purple_white">#F3E5F5</color>
-    <color name="purple_deep">#B39DDB</color>
-    <color name="white_orange">#FFE0B2</color>
-    <color name="gery">#555555</color>
-    <color name="green_spotify">#1DB954</color>
     <color name="faint_read">#FF0266</color>
     <color name="faint_grey">#363636</color>
     <color name="background">#48494B</color>
