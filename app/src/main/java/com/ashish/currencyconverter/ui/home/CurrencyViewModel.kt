@@ -2,21 +2,46 @@ package com.ashish.currencyconverter.ui.home
 
 import android.app.Activity
 import android.app.Application
+import android.graphics.Movie
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
 import com.ashish.currencyconverter.rest.ApiClient
+import com.ashish.currencyconverter.room.CurrencyRepo
+import com.ashish.currencyconverter.room.CurrencyRoomDatabase
 import com.ashish.currencyconverter.util.Constants.Companion.DEFAULT_VALUE
 import com.ashish.currencyconverter.util.Util
 import com.google.gson.JsonObject
+import kotlinx.coroutines.*
 import org.json.JSONArray
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class CurrencyViewModel : AndroidViewModel {
-    constructor(application: Application) : super(application) {
+class CurrencyViewModel(application: Application) : AndroidViewModel(application) {
+
+    private val repository: CurrencyRepo
+
+    init {
+        val rateDAO = CurrencyRoomDatabase.getDatabase(application).rateDAO()
+        repository = CurrencyRepo(rateDAO)
     }
 
+    fun getCode(): ArrayList<RateClass> = runBlocking(Dispatchers.Default) {
+        val result = async { repository.getRates() }.await()
+        return@runBlocking result as ArrayList<RateClass>
+    }
+    /**
+     * Launching a new coroutine to insert the data in a non-blocking way
+     */
+    fun insert(rate: RateClass) = viewModelScope.launch(Dispatchers.IO) {
+        repository.insert(rate)
+    }
+
+    fun delete() = viewModelScope.launch(Dispatchers.IO) {
+        repository.delete()
+    }
     fun getCurrencyData(base : String): MutableLiveData<String> {
         var userData = MutableLiveData<String>()
         val dataCall: Call<JsonObject> =

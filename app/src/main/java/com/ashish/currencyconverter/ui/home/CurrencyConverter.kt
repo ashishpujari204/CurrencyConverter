@@ -42,9 +42,9 @@ class CurrencyConverter : BaseActivity() {
         tvFromInput = findViewById(R.id.tvFromInput)
         loadCurrencyCode()
 
-        if(Util.verifyAvailableNetwork(this@CurrencyConverter)) {
+        if (Util.verifyAvailableNetwork(this@CurrencyConverter)) {
             getData("INR", "USD")
-        }else{
+        } else {
             showToast(resources.getString(R.string.network_connection))
             finish()
         }
@@ -66,11 +66,12 @@ class CurrencyConverter : BaseActivity() {
                 count: Int, after: Int
             ) {
             }
+
             override fun onTextChanged(
                 s: CharSequence, start: Int,
                 before: Int, count: Int
             ) {
-                if (s.isNotEmpty()) {
+                if (s != null && s.isNotEmpty() && rateCodeArray.isNotEmpty()) {
                     var calculatedAmount = s.toString().toDouble() * getToCurrencyObject()?.rate!!
                     tvToInput.text = "" + Util.roundOffDecimal(calculatedAmount)
                 }
@@ -136,14 +137,17 @@ class CurrencyConverter : BaseActivity() {
         if (jsonObject.optString(RESULT, DEFAULT_VALUE) == SUCCESS) {
             var rateObject = jsonObject.getJSONObject(CONVERSATION_RATES)
             var keys = rateObject.keys()
+            currencyViewModel.delete()
             while (keys.hasNext()) {
-                var rateCodeObject = RateClass()
+
                 var keyValue = keys.next()
-                rateCodeObject.code = keyValue
-                rateCodeObject.rate = rateObject.optDouble(keyValue, 0.0)
-                rateCodeArray.add(rateCodeObject)
+                var rateCodeObject = RateClass(0, keyValue, rateObject.optDouble(keyValue, 0.0))
+                currencyViewModel.insert(rateCodeObject)
             }
         }
+
+        rateCodeArray.addAll(currencyViewModel.getCode())
+
         setDefaultDataToView(fromCode, toCode)
     }
 
@@ -161,6 +165,7 @@ class CurrencyConverter : BaseActivity() {
     private fun loadCurrencyCode() {
         currencyArrayList = currencyViewModel.getMockCountryCode(this@CurrencyConverter)
     }
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == FROM_CURRENCY_INPUT) {
@@ -175,7 +180,7 @@ class CurrencyConverter : BaseActivity() {
             if (resultCode == Activity.RESULT_OK) {
                 val rate = data?.getParcelableExtra<RateClass>("OBJECT")
                 rate?.let {
-                    setDefaultDataToView(tvFromCode.text.toString(),rate.code)
+                    setDefaultDataToView(tvFromCode.text.toString(), rate.code)
                 }
             }
         }
