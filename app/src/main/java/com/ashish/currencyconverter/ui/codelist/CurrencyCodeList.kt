@@ -51,5 +51,6 @@ class CurrencyCodeList : BaseActivity() {
                 }
             }
         })
+        backToHome.setOnClickListener { finish() }
     }
 }

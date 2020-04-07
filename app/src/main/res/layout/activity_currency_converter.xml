@@ -6,12 +6,39 @@
     android:layout_height="match_parent"
     android:background="@color/background"
     tools:context=".ui.home.CurrencyConverter">
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/homeToolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimary"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark">
 
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:gravity="center_vertical">
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="10dp"
+                android:layout_toRightOf="@+id/backToHome"
+                android:text="@string/title"
+                android:fontFamily="@font/google_sans_regular"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:textColor="@color/white" />
+        </RelativeLayout>
+
+    </androidx.appcompat.widget.Toolbar>
     <LinearLayout
         android:id="@+id/currencySelectionLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:weightSum="3"
+        android:layout_below="@+id/homeToolbar"
         android:layout_marginTop="20dp"
         android:orientation="horizontal">
 
