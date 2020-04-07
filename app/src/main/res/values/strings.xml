@@ -11,4 +11,5 @@
     <string name="to">To</string>
     <string name="error_message">Currency details not found</string>
     <string name="selection_message">API not support selected currency code</string>
+    <string name="network_connection">Please check internet connection</string>
 </resources>

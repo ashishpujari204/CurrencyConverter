@@ -42,7 +42,12 @@ class CurrencyConverter : BaseActivity() {
         tvFromInput = findViewById(R.id.tvFromInput)
         loadCurrencyCode()
 
-        getData("INR","USD")
+        if(Util.verifyAvailableNetwork(this@CurrencyConverter)) {
+            getData("INR", "USD")
+        }else{
+            showToast(resources.getString(R.string.network_connection))
+            finish()
+        }
 
 
         currencySwipeButton.setOnClickListener {
