@@ -1,6 +1,5 @@
 package com.ashish.currencyconverter
 
-import androidx.test.espresso.matcher.ViewMatchers.assertThat
 import com.ashish.currencyconverter.rest.ApiClient
 import com.google.gson.JsonObject
 import org.junit.Test
