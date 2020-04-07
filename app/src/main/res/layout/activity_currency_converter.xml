@@ -13,10 +13,10 @@
         android:layout_height="wrap_content"
         android:weightSum="3"
         android:layout_marginTop="20dp"
-
         android:orientation="horizontal">
 
         <LinearLayout
+            android:id="@+id/lyFromCurrencySelection"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1.4"
@@ -59,6 +59,7 @@
 
 
         <LinearLayout
+            android:id="@+id/lyToCurrencySelection"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1.4"
@@ -99,7 +100,7 @@
         android:layout_marginTop="20dp"
         android:layout_below="@+id/currencySelectionLayout"
         android:orientation="vertical">
-        <EditText
+        <com.ashish.currencyconverter.util.CustomEditText
             android:id="@+id/tvFromInput"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -107,12 +108,12 @@
             android:layout_marginLeft="20dp"
             android:textColor="@color/faint_read"
             android:gravity="center_horizontal"
-            android:inputType="number"
+            android:digits="0123456789."
+            android:inputType="numberDecimal"
+            android:hint="@string/inr_amount"
             android:textColorHint="@color/faint_read"
-            android:digits="0123456789"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-            android:fontFamily="@font/google_sans_regular"
-            ></EditText>
+            />
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

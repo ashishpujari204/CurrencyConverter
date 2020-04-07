@@ -1,7 +1,9 @@
 package com.ashish.currencyconverter.ui.home
+import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
+import kotlinx.android.parcel.Parcelize
 
-
+@Parcelize
 data class DataClass(
     @SerializedName("base")
     var base: String = "",
@@ -19,8 +21,9 @@ data class DataClass(
     var timeNextUpdate: Int = 0,
     @SerializedName("time_zone")
     var timeZone: String = ""
-)
+):Parcelable
 
+@Parcelize
 data class ConversionRates(
     @SerializedName("AED")
     var AED: Double = 0.0,
@@ -124,4 +127,4 @@ data class ConversionRates(
     var UYU: Double = 0.0,
     @SerializedName("ZAR")
     var ZAR: Double = 0.0
-)
+):Parcelable

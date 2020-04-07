@@ -5,6 +5,8 @@ import android.net.ConnectivityManager
 import android.text.TextUtils
 import androidx.appcompat.app.AppCompatActivity
 import java.io.IOException
+import java.math.RoundingMode
+import java.text.DecimalFormat
 
 class Util {
 
@@ -29,6 +31,12 @@ class Util {
                 return null
             }
             return json
+        }
+
+        fun roundOffDecimal(number: Double): Double? {
+            val df = DecimalFormat("#.##")
+            df.roundingMode = RoundingMode.CEILING
+            return df.format(number).toDouble()
         }
     }
 
