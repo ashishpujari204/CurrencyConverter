@@ -9,7 +9,6 @@ import java.util.*
 class Constants {
 
     companion object {
-        var BASE_URL="http://smart-processor.in/SmartProcessor/"
         var font_name = "Fonts/google_sans_regular.ttf"
         var font_name_medium = "Fonts/google_sans_regular.ttf"
         var bold_font_name = "Fonts/google_sans_regular.ttf"
@@ -25,8 +24,14 @@ class Constants {
         private val IS_LOGIN = "is_login"
         private val ROLE = "role"
         private val APP_URL = "app_url"
+        var DEFAULT_VALUE="NA"
 
+        /**
+         * Json key
+         */
         val SUCCESS="success"
+        val RESULT="result"
+        val CONVERSATION_RATES="conversion_rates"
 
         /*fun saveUser(activity: Activity,userObject: User) {
             var storageRef=SharedPreferencesStorage(activity)

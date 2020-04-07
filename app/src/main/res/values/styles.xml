@@ -8,6 +8,6 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
     <style name="LineColor" parent="AppTheme">
-        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimary">@color/faint_grey</item>
     </style>
 </resources>
