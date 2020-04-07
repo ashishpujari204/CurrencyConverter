@@ -29,7 +29,7 @@ class CurrencyConverter : BaseActivity() {
         currencyViewModel= ViewModelProviders.of(this@CurrencyConverter).get(CurrencyViewModel::class.java)
         tvFromInput = findViewById(R.id.tvFromInput)
         loadCurrencyCode()
-        getData("USD")
+        getData("INR","USD")
 
         tvFromInput.addTextChangedListener(object : TextWatcher {
 
@@ -42,22 +42,25 @@ class CurrencyConverter : BaseActivity() {
             override fun onTextChanged(s: CharSequence, start: Int,
                                        before: Int, count: Int) {
 
-                if(s.isNotEmpty() && s.toString().toInt()!=0){
-                    var calculatedAmount = s.toString().toInt() * getFromCurrencyObject()?.rate!!
+                if(s.isNotEmpty()){
+                    var calculatedAmount = s.toString().toDouble() * getToCurrencyObject()?.rate!!
                     tvToInput.text=""+calculatedAmount
                 }
             }
         })
-
+        currencySwipeButton.setOnClickListener {
+            //setDefaultDataToView(tvToCode.text.toString(),tvFromCode.text.toString())
+            getData(tvToCode.text.toString(),tvFromCode.text.toString())
+        }
     }
 
-    private fun getData(base:String) {
+    private fun getData(base:String,toCode : String) {
         showProgressDialog()
         rateCodeArray= ArrayList()
         currencyViewModel.getCurrencyData(base).observe(this@CurrencyConverter, Observer {
             stopProgressDialog()
             if(it!=null){
-               parseData(it)
+               parseData(it,base,toCode)
             }else{
                 showToast(resources.getString(R.string.error_message))
             }
@@ -65,9 +68,9 @@ class CurrencyConverter : BaseActivity() {
 
     }
 
-    private fun setDefaultDataToView() {
-        var fromObject=rateCodeArray.find { it.code=="INR" }
-        var toObject=rateCodeArray.find { it.code=="USD" }
+    private fun setDefaultDataToView(fromCode : String , toCode : String) {
+        var fromObject=rateCodeArray.find { it.code==fromCode }
+        var toObject=rateCodeArray.find { it.code==toCode }
         tvFromCode.text=fromObject?.code
         tvToRate.text=""+fromObject?.rate+" "+fromObject?.code
 
@@ -76,12 +79,15 @@ class CurrencyConverter : BaseActivity() {
 
         tvFromInput.setText(""+fromObject?.rate)
         tvToInput.text = ""+toObject?.rate
+
+        tvFromInputCode.text=fromObject?.code
+        tvToInputCode.text=toObject?.code
     }
 
     /**
      * parse api response
      */
-    private fun parseData(it: String) {
+    private fun parseData(it: String,fromCode : String, toCode: String) {
         logError(it)
         var jsonObject=JSONObject(it)
         if(jsonObject.optString(RESULT,DEFAULT_VALUE)==SUCCESS){
@@ -95,7 +101,7 @@ class CurrencyConverter : BaseActivity() {
                 rateCodeArray.add(rateCodeObject)
             }
         }
-        setDefaultDataToView()
+        setDefaultDataToView(fromCode,toCode)
     }
 
     private fun getToCurrencyObject() : RateClass?

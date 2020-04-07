@@ -106,12 +106,13 @@
             android:layout_marginRight="20dp"
             android:layout_marginLeft="20dp"
             android:textColor="@color/faint_read"
-            android:theme="@style/LineColor"
             android:gravity="center_horizontal"
+            android:inputType="number"
             android:textColorHint="@color/faint_read"
+            android:digits="0123456789"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
             android:fontFamily="@font/google_sans_regular"
-            android:inputType="number"></EditText>
+            ></EditText>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
