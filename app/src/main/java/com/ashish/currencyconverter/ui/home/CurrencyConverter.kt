@@ -58,8 +58,9 @@ class CurrencyConverter : BaseActivity() {
                 getData(from, to)
             }
         } else {
-            rateCodeArray.addAll(currencyViewModel.getCode())
-            getData(from, to)
+            /*rateCodeArray.addAll(currencyViewModel.getCode())
+            getData(from, to)*/
+            showToast(resources.getString(R.string.network_connection))
         }
 
 
