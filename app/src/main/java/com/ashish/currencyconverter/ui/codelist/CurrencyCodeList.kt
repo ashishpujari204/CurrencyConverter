@@ -15,7 +15,7 @@ class CurrencyCodeList : BaseActivity() {
 
     lateinit var currencyMockArrayList: ArrayList<CurrencyClass>
     lateinit var rateAPICodeArray: ArrayList<RateClass>
-
+    lateinit var codeAdapter: CodeListAdapter
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_currency_code_list)
@@ -25,16 +25,17 @@ class CurrencyCodeList : BaseActivity() {
     private fun initial() {
         currencyMockArrayList = intent.getParcelableArrayListExtra("CUR_MOCK_ARRAY")
         rateAPICodeArray = intent.getParcelableArrayListExtra("CUR_API_ARRAY")
+        setDataToAdapter()
+        clickEvent()
+    }
+    private fun setDataToAdapter() {
         codeList.layoutManager = LinearLayoutManager(this@CurrencyCodeList)
-        val codeAdapter =
-            CodeListAdapter(currencyMockArrayList)
+        codeAdapter = CodeListAdapter(currencyMockArrayList)
         codeList.adapter = codeAdapter
-        codeList.addItemDecoration(
-            DividerItemDecoration(
-                this@CurrencyCodeList,
-                LinearLayoutManager.VERTICAL
-            )
-        )
+        codeList.addItemDecoration(DividerItemDecoration(this@CurrencyCodeList,
+            LinearLayoutManager.VERTICAL))
+    }
+    private fun clickEvent() {
         codeAdapter.setClickListener(object : CodeListAdapter.ClickListener {
             override fun onItemClick(v: View, position: Int) {
                 var fromObject =
