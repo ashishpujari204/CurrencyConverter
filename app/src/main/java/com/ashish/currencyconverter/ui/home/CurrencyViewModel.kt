@@ -27,10 +27,11 @@ class CurrencyViewModel(application: Application) : AndroidViewModel(application
 
     private val repository: CurrencyRepo
     val newRecords: LiveData<List<RateClass>>
+
     init {
         val rateDAO = CurrencyRoomDatabase.getDatabase(application).rateDAO()
         repository = CurrencyRepo(rateDAO)
-        newRecords=rateDAO.getLiveRecords()
+        newRecords = rateDAO.getLiveRecords()
     }
 
     fun getCode(): ArrayList<RateClass> = runBlocking(Dispatchers.Default) {
@@ -45,7 +46,7 @@ class CurrencyViewModel(application: Application) : AndroidViewModel(application
         repository.insert(rate)
     }
 
-    fun delete() = viewModelScope.launch(Dispatchers.IO) {
+    fun deleteAll() = viewModelScope.launch(Dispatchers.IO) {
         repository.delete()
     }
 
@@ -62,25 +63,8 @@ class CurrencyViewModel(application: Application) : AndroidViewModel(application
                 if (response.isSuccessful) {
                     if (response.code() == 200) {
                         userData.value = response.body().toString()
-                        var rateCodeArray = ArrayList<RateClass>()
-                        var jsonObject = JSONObject(response.body().toString())
-                        if (jsonObject.optString(
-                                Constants.RESULT,
-                                DEFAULT_VALUE
-                            ) == Constants.SUCCESS
-                        ) {
-                            delete()
-                            var rateObject = jsonObject.getJSONObject(CONVERSATION_RATES)
-                            var keys = rateObject.keys()
 
-                            while (keys.hasNext()) {
-                                var keyValue = keys.next()
-                                var rateCodeObject =
-                                    RateClass(0, keyValue, rateObject.optDouble(keyValue, 0.0))
-                                rateCodeArray.add(rateCodeObject)
-                            }
-                            insert(rateCodeArray)
-                        }
+                        insert(parseJson(response.body().toString()))
                     } else {
                         userData.value = null
                     }
@@ -94,6 +78,25 @@ class CurrencyViewModel(application: Application) : AndroidViewModel(application
             }
         })
         return userData
+    }
+
+    fun parseJson(response : String) : ArrayList<RateClass>{
+        var rateCodeArray = ArrayList<RateClass>()
+        var jsonObject = JSONObject(response)
+        if (jsonObject.optString(Constants.RESULT,
+                DEFAULT_VALUE) == Constants.SUCCESS) {
+            deleteAll()
+            var rateObject = jsonObject.getJSONObject(CONVERSATION_RATES)
+            var keys = rateObject.keys()
+
+            while (keys.hasNext()) {
+                var keyValue = keys.next()
+                var rateCodeObject =
+                    RateClass(0, keyValue, rateObject.optDouble(keyValue, 0.0))
+                rateCodeArray.add(rateCodeObject)
+            }
+        }
+        return rateCodeArray
     }
 
     fun getMockCountryCode(activity: Activity): ArrayList<CurrencyClass> {
