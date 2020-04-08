@@ -2,7 +2,6 @@ package com.ashish.currencyconverter.util
 
 import android.content.Context
 import android.net.ConnectivityManager
-import android.text.TextUtils
 import androidx.appcompat.app.AppCompatActivity
 import java.io.IOException
 import java.math.RoundingMode

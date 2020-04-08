@@ -5,27 +5,28 @@ import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
+import android.view.View
 import android.widget.EditText
+import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.ashish.currencyconverter.R
-import com.ashish.currencyconverter.baseclasses.BaseActivity
 import com.ashish.currencyconverter.util.Constants
-import com.ashish.currencyconverter.util.Constants.Companion.CONVERSATION_RATES
-import com.ashish.currencyconverter.util.Constants.Companion.DEFAULT_VALUE
 import com.ashish.currencyconverter.util.NavigationUtil
 import com.ashish.currencyconverter.util.Util
 import kotlinx.android.synthetic.main.activity_currency_converter.*
-import org.json.JSONObject
 import java.lang.NumberFormatException
 
 
-class CurrencyConverter : BaseActivity() {
+class CurrencyConverter : AppCompatActivity() {
 
     lateinit var currencyArrayList: ArrayList<CurrencyClass>
     lateinit var rateCodeArray: ArrayList<RateClass>
     lateinit var currencyViewModel: CurrencyViewModel
     lateinit var tvFromInput: EditText
+
 
     val FROM_CURRENCY_INPUT: Int = 1
     val TO_CURRENCY_INPUT: Int = 2
@@ -116,6 +117,10 @@ class CurrencyConverter : BaseActivity() {
         })
     }
 
+    private fun logError(toString: String) {
+        Log.e("CurrencyConverter",toString)
+    }
+
     private fun setupNavigation() {
         lyFromCurrencySelection.setOnClickListener {
             if (Util.verifyAvailableNetwork(this@CurrencyConverter)) {
@@ -136,9 +141,9 @@ class CurrencyConverter : BaseActivity() {
     }
 
     private fun getData(base: String, toCode: String, needToUpdateArray: Boolean) {
-        showProgressDialog()
+        progressBar.visibility= View.VISIBLE
         currencyViewModel.getCurrencyData(base).observe(this@CurrencyConverter, Observer {
-            stopProgressDialog()
+            progressBar.visibility= View.GONE
             parseData(it, base, toCode, needToUpdateArray)
         })
 
@@ -226,5 +231,8 @@ class CurrencyConverter : BaseActivity() {
                 }
             }
         }
+    }
+    private fun showToast(string: String) {
+        Toast.makeText(this@CurrencyConverter,string, Toast.LENGTH_SHORT).show()
     }
 }

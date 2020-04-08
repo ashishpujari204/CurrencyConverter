@@ -7,9 +7,9 @@ import androidx.room.RoomDatabase
 import com.ashish.currencyconverter.ui.home.RateClass
 
 @Database(entities = [RateClass::class], version = 2, exportSchema = false)
-public abstract class CurrencyRoomDatabase : RoomDatabase() {
+ abstract class CurrencyRoomDatabase : RoomDatabase() {
 
-    public abstract fun rateDAO(): RateDAO
+     abstract fun rateDAO(): RateDAO
 
     companion object {
         // Singleton prevents multiple instances of database opening at the

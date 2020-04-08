@@ -8,7 +8,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 object ApiClient {
-    val KEY = "59363ff0a3f3ca29fa9f4103"
+    private val KEY = "59363ff0a3f3ca29fa9f4103"
     val BASE_URL="https://prime.exchangerate-api.com/v5/$KEY/"
 
     //val BASE_URL="https://api.exchangeratesapi.io/"

@@ -2,16 +2,17 @@ package com.ashish.currencyconverter.ui.codelist
 
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.ashish.currencyconverter.R
-import com.ashish.currencyconverter.baseclasses.BaseActivity
 import com.ashish.currencyconverter.ui.home.CurrencyClass
 import com.ashish.currencyconverter.ui.home.RateClass
 import com.ashish.currencyconverter.util.NavigationUtil
 import kotlinx.android.synthetic.main.activity_currency_code_list.*
 
-class CurrencyCodeList : BaseActivity() {
+class CurrencyCodeList : AppCompatActivity() {
 
     lateinit var currencyMockArrayList: ArrayList<CurrencyClass>
     lateinit var rateAPICodeArray: ArrayList<RateClass>
@@ -49,4 +50,10 @@ class CurrencyCodeList : BaseActivity() {
         })
         backToHome.setOnClickListener { finish() }
     }
+
+    private fun showToast(string: String) {
+        Toast.makeText(this@CurrencyCodeList,string,Toast.LENGTH_SHORT).show()
+    }
+
+
 }
