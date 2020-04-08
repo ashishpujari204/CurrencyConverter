@@ -9,10 +9,12 @@ import kotlinx.android.parcel.Parcelize
 @Parcelize
 @Entity(tableName = "currency")
 data class RateClass (
-    @PrimaryKey(autoGenerate = true) val id: Int,
+    @PrimaryKey(autoGenerate = true)
+    val id: Int,
+
     @ColumnInfo(name = "code")
-    var code: String = "",
+    var code: String ,
     @ColumnInfo(name = "rate")
-    var rate:Double=0.0
+    var rate:Double
 
 ):Parcelable
