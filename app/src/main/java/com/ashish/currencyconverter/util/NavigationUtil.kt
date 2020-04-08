@@ -20,5 +20,13 @@ class NavigationUtil {
             activity.startActivityForResult(intent, fromCurrencyInputCode)
         }
 
+        fun backDataToHomeScreen(
+            activity: Activity,
+            fromObject: RateClass){
+            val result = Intent()
+            result.putExtra("OBJECT", fromObject)
+            activity.setResult(Activity.RESULT_OK, result)
+            activity.finish()
+        }
     }
 }

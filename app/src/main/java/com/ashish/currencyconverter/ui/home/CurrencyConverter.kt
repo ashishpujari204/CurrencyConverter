@@ -118,9 +118,7 @@ class CurrencyConverter : BaseActivity() {
                 } catch (e: NumberFormatException) {
                     logError(e.toString())
                 }
-                /*} catch (e1: Exception) {
-                    logError(e1.toString())
-                }*/
+
             }
         })
     }
