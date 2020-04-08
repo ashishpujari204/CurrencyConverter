@@ -90,6 +90,7 @@ class CurrencyConverter : BaseActivity() {
                 showToast(resources.getString(R.string.network_connection))
             }
         }
+
         setupCalculation()
         setupNavigation()
     }

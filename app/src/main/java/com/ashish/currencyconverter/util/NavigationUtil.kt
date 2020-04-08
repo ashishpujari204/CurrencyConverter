@@ -8,21 +8,17 @@ import com.ashish.currencyconverter.ui.home.RateClass
 
 class NavigationUtil {
     companion object {
-        fun pickCurrencyCode(
-            activity: Activity,
-            currencyArrayList: ArrayList<CurrencyClass>,
-            rateCodeArray: ArrayList<RateClass>,
-            fromCurrencyInputCode: Int
-        ) {
+        fun pickCurrencyCode(activity: Activity,
+                             currencyArrayList: ArrayList<CurrencyClass>,
+                             rateCodeArray: ArrayList<RateClass>,
+                             fromCurrencyInputCode: Int) {
             var intent = Intent(activity, CurrencyCodeList::class.java)
-            intent.putExtra("CUR_MOCK_ARRAY",currencyArrayList)
-            intent.putExtra("CUR_API_ARRAY",rateCodeArray)
+            intent.putExtra("CUR_MOCK_ARRAY", currencyArrayList)
+            intent.putExtra("CUR_API_ARRAY", rateCodeArray)
             activity.startActivityForResult(intent, fromCurrencyInputCode)
         }
 
-        fun backDataToHomeScreen(
-            activity: Activity,
-            fromObject: RateClass){
+        fun backDataToHomeScreen(activity: Activity, fromObject: RateClass) {
             val result = Intent()
             result.putExtra("OBJECT", fromObject)
             activity.setResult(Activity.RESULT_OK, result)
