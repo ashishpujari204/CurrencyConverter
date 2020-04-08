@@ -86,7 +86,6 @@ class CurrencyConverter : BaseActivity() {
                 Constants.saveFromCode(this@CurrencyConverter, tvToCode.text.toString())
                 Constants.saveToCode(this@CurrencyConverter, tvFromCode.text.toString())
                 getData(tvToCode.text.toString(), tvFromCode.text.toString(),true)
-
             } else {
                 showToast(resources.getString(R.string.network_connection))
             }
