@@ -159,7 +159,8 @@
                 android:layout_marginRight="20dp"
                 android:digits="0123456789."
                 android:gravity="center_horizontal"
-                android:text='@{Double.toString(uiClassObject.fromRate)}'
+                android:onTextChanged="@{viewModel.onAmountTextChanged}"
+                android:text='@{Double.toString(uiClassObject.editableRate)}'
                 android:inputType="numberDecimal"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                 android:textColor="@color/faint_read"

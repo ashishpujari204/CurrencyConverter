@@ -3,7 +3,6 @@ package com.ashish.currencyconverter.ui.home
 import android.app.Activity
 import android.app.Application
 import android.content.Context
-import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.AndroidViewModel
@@ -22,14 +21,12 @@ import com.ashish.currencyconverter.util.Constants.Companion.TO_CURRENCY_INPUT
 import com.ashish.currencyconverter.util.NavigationUtil
 import com.ashish.currencyconverter.util.Util
 import com.google.gson.JsonObject
-import kotlinx.android.synthetic.main.activity_currency_converter.*
 import kotlinx.coroutines.*
 import org.json.JSONArray
 import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import java.util.concurrent.Executors
 
 class CurrencyViewModel(application: Application) : AndroidViewModel(application) {
 
@@ -60,20 +57,14 @@ class CurrencyViewModel(application: Application) : AndroidViewModel(application
     }
 
 
-
     fun getCurrencyData(base: String): MutableLiveData<String> {
         var userData = MutableLiveData<String>()
         val dataCall: Call<JsonObject> = ApiClient.getClient.getData(base)
         dataCall!!.enqueue(object : Callback<JsonObject> {
             override fun onResponse(call: Call<JsonObject>, response: Response<JsonObject>) {
-
                 if (response.isSuccessful) {
                     if (response.code() == 200) {
                         userData.value = response.body().toString()
-                        if(codeRateArray.isNotEmpty()){
-                            codeRateArray.clear()
-                            codeRateArray.addAll(parseJson(response.body().toString()))
-                        }
                         insert(parseJson(response.body().toString()))
                     } else {
                         userData.value = null
@@ -114,6 +105,17 @@ class CurrencyViewModel(application: Application) : AndroidViewModel(application
         return rateCodeArray
     }
 
+    fun onAmountTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
+        /*try {
+            if (s != null && s.isNotEmpty() && getCode().isNotEmpty()) {
+                var toObject = getToCurrencyObject()
+                var calculatedAmount = s.toString().toDouble() * toObject?.rate!!
+                tvToInput.text = "" + Util.roundOffDecimal(calculatedAmount)
+            }
+        } catch (e: NumberFormatException) {
+        }*/
+    }
+
     fun getFromCurrencyCode(context: Context) {
         if (Util.verifyAvailableNetwork(context as AppCompatActivity)) {
             NavigationUtil.pickCurrencyCode(context as AppCompatActivity,
@@ -126,13 +128,15 @@ class CurrencyViewModel(application: Application) : AndroidViewModel(application
                 Toast.LENGTH_SHORT).show()
         }
     }
+
     fun getToCurrencyCode(context: Context) {
-            NavigationUtil.pickCurrencyCode(context as AppCompatActivity,
-                getMockCountryCode(context as Activity),
-                getCode(),
-                TO_CURRENCY_INPUT)
+        NavigationUtil.pickCurrencyCode(context as AppCompatActivity,
+            getMockCountryCode(context as Activity),
+            getCode(),
+            TO_CURRENCY_INPUT)
 
     }
+
     fun getMockCountryCode(activity: Activity): ArrayList<CurrencyClass> {
         var currencyArray = JSONArray(Util.getAssetJsonData(activity))
         var currencyArrayList = ArrayList<CurrencyClass>()

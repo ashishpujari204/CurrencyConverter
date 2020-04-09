@@ -4,5 +4,6 @@ class UIModelClass(
     var fromCode : String,
     var fromRate : Double,
     var toCode : String,
-    var toRate : Double
+    var toRate : Double,
+    var editableRate : Double
 )

@@ -20,7 +20,6 @@ import com.ashish.currencyconverter.util.Constants.Companion.DEFAULT_FROM_CODE
 import com.ashish.currencyconverter.util.Constants.Companion.DEFAULT_TO_CODE
 import com.ashish.currencyconverter.util.Constants.Companion.FROM_CURRENCY_INPUT
 import com.ashish.currencyconverter.util.Constants.Companion.TO_CURRENCY_INPUT
-import com.ashish.currencyconverter.util.NavigationUtil
 import com.ashish.currencyconverter.util.Util
 import kotlinx.android.synthetic.main.activity_currency_converter.*
 import java.lang.NumberFormatException
@@ -132,7 +131,7 @@ class CurrencyConverter : AppCompatActivity() {
         var toObject = rateCodeArray.find { it.code == toCode }
 
         var uiModelClass =
-            UIModelClass(fromObject!!.code, fromObject.rate, toObject!!.code, toObject.rate)
+            UIModelClass(fromObject!!.code, fromObject.rate, toObject!!.code, toObject.rate,fromObject.rate)
 
         activityCurrencyConverterBinding.uiClassObject = uiModelClass
         tvToCode.text = toObject?.code
@@ -150,6 +149,7 @@ class CurrencyConverter : AppCompatActivity() {
         if (rateCodeArray.isNotEmpty()) {
             rateCodeArray.clear()
         }
+        currencyViewModel.insert(currencyViewModel.parseJson(response))
         /*if(needToUpdateArray) {
             currencyViewModel.newRecords.observe(this, Observer {
                 rateCodeArray.addAll(it)
