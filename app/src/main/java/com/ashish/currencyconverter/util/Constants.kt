@@ -15,12 +15,18 @@ class Constants {
         /**
          * Json key
          */
+
         val SUCCESS="success"
         val RESULT="result"
         val CONVERSATION_RATES="conversion_rates"
 
         val FROM_CODE = "from_code"
         val TO_CODE = "to_code"
+
+        const val DEFAULT_FROM_CODE: String = "INR"
+        const val DEFAULT_TO_CODE: String = "USD"
+        const val FROM_CURRENCY_INPUT: Int = 1
+        const val TO_CURRENCY_INPUT: Int = 2
 
         fun saveFromCode(activity: Activity, fromCode: String) {
             var storageRef= SharedPreferencesStorage(activity)

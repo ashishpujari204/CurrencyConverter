@@ -10,10 +10,16 @@ import android.view.View
 import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.ashish.currencyconverter.R
+import com.ashish.currencyconverter.databinding.ActivityCurrencyConverterBinding
 import com.ashish.currencyconverter.util.Constants
+import com.ashish.currencyconverter.util.Constants.Companion.DEFAULT_FROM_CODE
+import com.ashish.currencyconverter.util.Constants.Companion.DEFAULT_TO_CODE
+import com.ashish.currencyconverter.util.Constants.Companion.FROM_CURRENCY_INPUT
+import com.ashish.currencyconverter.util.Constants.Companion.TO_CURRENCY_INPUT
 import com.ashish.currencyconverter.util.NavigationUtil
 import com.ashish.currencyconverter.util.Util
 import kotlinx.android.synthetic.main.activity_currency_converter.*
@@ -26,26 +32,21 @@ class CurrencyConverter : AppCompatActivity() {
     lateinit var rateCodeArray: ArrayList<RateClass>
     lateinit var currencyViewModel: CurrencyViewModel
     lateinit var tvFromInput: EditText
-
-
-    val FROM_CURRENCY_INPUT: Int = 1
-    val TO_CURRENCY_INPUT: Int = 2
-
     lateinit var from: String
     lateinit var to: String
 
-    var DEFAULT_FROM_CODE: String = "INR"
-    var DEFAULT_TO_CODE: String = "USD"
-
+    lateinit var activityCurrencyConverterBinding: ActivityCurrencyConverterBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_currency_converter)
-        currencyArrayList = ArrayList()
-        rateCodeArray = ArrayList()
+        activityCurrencyConverterBinding =
+            DataBindingUtil.setContentView(this, R.layout.activity_currency_converter)
         currencyViewModel =
             ViewModelProviders.of(this@CurrencyConverter).get(CurrencyViewModel::class.java)
-        tvFromInput = findViewById(R.id.tvFromInput)
+        activityCurrencyConverterBinding.viewModel = currencyViewModel
+        currencyArrayList = ArrayList()
+        rateCodeArray = ArrayList()
+
         loadMockCurrencyCode()
         from = Constants.getFromCode(this@CurrencyConverter)
         to = Constants.getToCode(this@CurrencyConverter)
@@ -93,11 +94,10 @@ class CurrencyConverter : AppCompatActivity() {
         }
 
         setupCalculation()
-        setupNavigation()
     }
 
     private fun setupCalculation() {
-        tvFromInput.addTextChangedListener(object : TextWatcher {
+        activityCurrencyConverterBinding.tvFromInput.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable) {}
             override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
             }
@@ -117,33 +117,11 @@ class CurrencyConverter : AppCompatActivity() {
         })
     }
 
-    private fun logError(toString: String) {
-        Log.e("CurrencyConverter",toString)
-    }
-
-    private fun setupNavigation() {
-        lyFromCurrencySelection.setOnClickListener {
-            if (Util.verifyAvailableNetwork(this@CurrencyConverter)) {
-                NavigationUtil.pickCurrencyCode(this@CurrencyConverter,
-                    currencyArrayList,
-                    rateCodeArray,
-                    FROM_CURRENCY_INPUT)
-            } else {
-                showToast(resources.getString(R.string.network_connection))
-            }
-        }
-        lyToCurrencySelection.setOnClickListener {
-            NavigationUtil.pickCurrencyCode(this@CurrencyConverter,
-                currencyArrayList,
-                rateCodeArray,
-                TO_CURRENCY_INPUT)
-        }
-    }
 
     private fun getData(base: String, toCode: String, needToUpdateArray: Boolean) {
-        progressBar.visibility= View.VISIBLE
+        progressBar.visibility = View.VISIBLE
         currencyViewModel.getCurrencyData(base).observe(this@CurrencyConverter, Observer {
-            progressBar.visibility= View.GONE
+            progressBar.visibility = View.GONE
             parseData(it, base, toCode, needToUpdateArray)
         })
 
@@ -152,17 +130,13 @@ class CurrencyConverter : AppCompatActivity() {
     private fun setDefaultDataToView(fromCode: String, toCode: String) {
         var fromObject = rateCodeArray.find { it.code == fromCode }
         var toObject = rateCodeArray.find { it.code == toCode }
-        tvFromCode.text = fromObject?.code
-        tvToRate.text = "" + fromObject?.rate + " " + fromObject?.code
 
+        var uiModelClass =
+            UIModelClass(fromObject!!.code, fromObject.rate, toObject!!.code, toObject.rate)
+
+        activityCurrencyConverterBinding.uiClassObject = uiModelClass
         tvToCode.text = toObject?.code
-        tvFromRate.text = "" + toObject?.rate + " " + toObject?.code
 
-        tvFromInput.setText("" + fromObject?.rate)
-        tvToInput.text = "" + toObject?.rate
-
-        tvFromInputCode.text = fromObject?.code
-        tvToInputCode.text = toObject?.code
     }
 
     /**
@@ -199,7 +173,7 @@ class CurrencyConverter : AppCompatActivity() {
     }
 
     private fun getToCurrencyObject(): RateClass? {
-        return rateCodeArray.find { it.code == tvToCode.text }
+        return rateCodeArray.find { it.code == tvToCode.text.toString() }
     }
 
 
@@ -232,7 +206,15 @@ class CurrencyConverter : AppCompatActivity() {
             }
         }
     }
+
     private fun showToast(string: String) {
-        Toast.makeText(this@CurrencyConverter,string, Toast.LENGTH_SHORT).show()
+        Toast.makeText(this@CurrencyConverter, string, Toast.LENGTH_SHORT).show()
     }
+
+    private fun logError(toString: String) {
+        Log.e("CurrencyConverter", toString)
+    }
+
+
+
 }

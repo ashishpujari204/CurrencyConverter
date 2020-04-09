@@ -2,19 +2,27 @@ package com.ashish.currencyconverter.ui.home
 
 import android.app.Activity
 import android.app.Application
+import android.content.Context
 import android.util.Log
+import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import com.ashish.currencyconverter.R
 import com.ashish.currencyconverter.rest.ApiClient
 import com.ashish.currencyconverter.room.CurrencyRepo
 import com.ashish.currencyconverter.room.CurrencyRoomDatabase
 import com.ashish.currencyconverter.util.Constants
 import com.ashish.currencyconverter.util.Constants.Companion.CONVERSATION_RATES
 import com.ashish.currencyconverter.util.Constants.Companion.DEFAULT_VALUE
+import com.ashish.currencyconverter.util.Constants.Companion.FROM_CURRENCY_INPUT
+import com.ashish.currencyconverter.util.Constants.Companion.TO_CURRENCY_INPUT
+import com.ashish.currencyconverter.util.NavigationUtil
 import com.ashish.currencyconverter.util.Util
 import com.google.gson.JsonObject
+import kotlinx.android.synthetic.main.activity_currency_converter.*
 import kotlinx.coroutines.*
 import org.json.JSONArray
 import org.json.JSONObject
@@ -27,6 +35,7 @@ class CurrencyViewModel(application: Application) : AndroidViewModel(application
 
     private val repository: CurrencyRepo
     val newRecords: LiveData<List<RateClass>>
+    var codeRateArray: ArrayList<RateClass> = ArrayList()
 
     init {
         val rateDAO = CurrencyRoomDatabase.getDatabase(application).rateDAO()
@@ -46,13 +55,11 @@ class CurrencyViewModel(application: Application) : AndroidViewModel(application
         repository.insert(rate)
     }
 
-    fun deleteAll() = viewModelScope.launch(Dispatchers.IO) {
+    private fun deleteAll() = viewModelScope.launch(Dispatchers.IO) {
         repository.delete()
     }
 
-    fun rowCount(): Int = runBlocking(Dispatchers.Default) {
-        return@runBlocking async { repository.getRowCount() }.await()
-    }
+
 
     fun getCurrencyData(base: String): MutableLiveData<String> {
         var userData = MutableLiveData<String>()
@@ -63,7 +70,10 @@ class CurrencyViewModel(application: Application) : AndroidViewModel(application
                 if (response.isSuccessful) {
                     if (response.code() == 200) {
                         userData.value = response.body().toString()
-
+                        if(codeRateArray.isNotEmpty()){
+                            codeRateArray.clear()
+                            codeRateArray.addAll(parseJson(response.body().toString()))
+                        }
                         insert(parseJson(response.body().toString()))
                     } else {
                         userData.value = null
@@ -80,25 +90,49 @@ class CurrencyViewModel(application: Application) : AndroidViewModel(application
         return userData
     }
 
-    fun parseJson(response : String) : ArrayList<RateClass>{
+    fun swipeCurrencyCode(base: String, formCode: String, context: Context) {
+        Constants.saveFromCode(context as Activity, base)
+        Constants.saveToCode(context as Activity, formCode)
+        getCurrencyData(base)
+
+    }
+
+    fun parseJson(response: String): ArrayList<RateClass> {
         var rateCodeArray = ArrayList<RateClass>()
         var jsonObject = JSONObject(response)
-        if (jsonObject.optString(Constants.RESULT,
-                DEFAULT_VALUE) == Constants.SUCCESS) {
+        if (jsonObject.optString(Constants.RESULT, DEFAULT_VALUE) == Constants.SUCCESS) {
             deleteAll()
             var rateObject = jsonObject.getJSONObject(CONVERSATION_RATES)
             var keys = rateObject.keys()
 
             while (keys.hasNext()) {
                 var keyValue = keys.next()
-                var rateCodeObject =
-                    RateClass(0, keyValue, rateObject.optDouble(keyValue, 0.0))
+                var rateCodeObject = RateClass(0, keyValue, rateObject.optDouble(keyValue, 0.0))
                 rateCodeArray.add(rateCodeObject)
             }
         }
         return rateCodeArray
     }
 
+    fun getFromCurrencyCode(context: Context) {
+        if (Util.verifyAvailableNetwork(context as AppCompatActivity)) {
+            NavigationUtil.pickCurrencyCode(context as AppCompatActivity,
+                getMockCountryCode(context as Activity),
+                getCode(),
+                FROM_CURRENCY_INPUT)
+        } else {
+            Toast.makeText(context as Activity,
+                context.resources.getString(R.string.network_connection),
+                Toast.LENGTH_SHORT).show()
+        }
+    }
+    fun getToCurrencyCode(context: Context) {
+            NavigationUtil.pickCurrencyCode(context as AppCompatActivity,
+                getMockCountryCode(context as Activity),
+                getCode(),
+                TO_CURRENCY_INPUT)
+
+    }
     fun getMockCountryCode(activity: Activity): ArrayList<CurrencyClass> {
         var currencyArray = JSONArray(Util.getAssetJsonData(activity))
         var currencyArrayList = ArrayList<CurrencyClass>()
