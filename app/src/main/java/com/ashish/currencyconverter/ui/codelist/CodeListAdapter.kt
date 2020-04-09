@@ -6,10 +6,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import com.ashish.currencyconverter.R
+import com.ashish.currencyconverter.databinding.CodeListItemViewBinding
 import com.ashish.currencyconverter.ui.home.CurrencyClass
 
 
-class CodeListAdapter(items: ArrayList<CurrencyClass>) : RecyclerView.Adapter<CodeListAdapter.ViewHolder>() {
+class CodeListAdapter(items: ArrayList<CurrencyClass>) :
+    RecyclerView.Adapter<CodeListAdapter.ViewHolder>() {
 
     private var clickListener: ClickListener? = null
     private var items = ArrayList<CurrencyClass>()
@@ -19,20 +21,15 @@ class CodeListAdapter(items: ArrayList<CurrencyClass>) : RecyclerView.Adapter<Co
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view =
-            LayoutInflater.from(parent.context).inflate(R.layout.code_list_item_view, parent, false)
-        return ViewHolder(view)
+        val inflater = LayoutInflater.from(parent.context)
+        val binding = CodeListItemViewBinding.inflate(inflater)
+        return ViewHolder(binding)
     }
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        // display stuff on view item
-        var codeModel=items.get(position)
-        holder.tvCodeTitle?.text = codeModel.code +" - "+ codeModel.name
-    }
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) = holder.bind(items[position])
 
-    override fun getItemCount(): Int {
-        return items.size
-    }
+    override fun getItemCount(): Int = items.size
+
 
     fun setClickListener(clickListener: ClickListener) {
         this.clickListener = clickListener
@@ -42,16 +39,13 @@ class CodeListAdapter(items: ArrayList<CurrencyClass>) : RecyclerView.Adapter<Co
         fun onItemClick(v: View, position: Int)
     }
 
-    inner class ViewHolder
-    // declare other views
+    inner class ViewHolder(private val binding: CodeListItemViewBinding) :
+        RecyclerView.ViewHolder(binding.root), View.OnClickListener {
 
-        (itemView: View) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
-         var tvCodeTitle: TextView? = null
-
-        init {
-            tvCodeTitle = itemView.findViewById(R.id.tvCodeTitle) as TextView
-            itemView.setOnClickListener(this)
-
+        fun bind(item: CurrencyClass) {
+            binding.currencyObject = item
+            binding.executePendingBindings()
+            binding.root.setOnClickListener(this)
         }
 
         override fun onClick(view: View) {

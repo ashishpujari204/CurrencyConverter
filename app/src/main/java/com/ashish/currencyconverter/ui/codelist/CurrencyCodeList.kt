@@ -4,9 +4,11 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.ashish.currencyconverter.R
+import com.ashish.currencyconverter.databinding.ActivityCurrencyCodeListBinding
 import com.ashish.currencyconverter.ui.home.CurrencyClass
 import com.ashish.currencyconverter.ui.home.RateClass
 import com.ashish.currencyconverter.util.NavigationUtil
@@ -17,9 +19,10 @@ class CurrencyCodeList : AppCompatActivity() {
     lateinit var currencyMockArrayList: ArrayList<CurrencyClass>
     lateinit var rateAPICodeArray: ArrayList<RateClass>
     lateinit var codeAdapter: CodeListAdapter
+    lateinit var currencyCodeListBinding: ActivityCurrencyCodeListBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_currency_code_list)
+        currencyCodeListBinding=DataBindingUtil.setContentView(this,R.layout.activity_currency_code_list)
         initial()
     }
 
@@ -30,10 +33,9 @@ class CurrencyCodeList : AppCompatActivity() {
         clickEvent()
     }
     private fun setDataToAdapter() {
-        codeList.layoutManager = LinearLayoutManager(this@CurrencyCodeList)
         codeAdapter = CodeListAdapter(currencyMockArrayList)
-        codeList.adapter = codeAdapter
-        codeList.addItemDecoration(DividerItemDecoration(this@CurrencyCodeList,
+        currencyCodeListBinding.codeList.adapter = codeAdapter
+        currencyCodeListBinding.codeList.addItemDecoration(DividerItemDecoration(this@CurrencyCodeList,
             LinearLayoutManager.VERTICAL))
     }
     private fun clickEvent() {
