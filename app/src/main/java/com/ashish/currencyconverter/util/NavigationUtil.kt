@@ -9,11 +9,9 @@ import com.ashish.currencyconverter.ui.home.RateClass
 class NavigationUtil {
     companion object {
         fun pickCurrencyCode(activity: Activity,
-                             currencyArrayList: ArrayList<CurrencyClass>,
                              rateCodeArray: ArrayList<RateClass>,
                              fromCurrencyInputCode: Int) {
             var intent = Intent(activity, CurrencyCodeList::class.java)
-            intent.putExtra("CUR_MOCK_ARRAY", currencyArrayList)
             intent.putExtra("CUR_API_ARRAY", rateCodeArray)
             activity.startActivityForResult(intent, fromCurrencyInputCode)
         }

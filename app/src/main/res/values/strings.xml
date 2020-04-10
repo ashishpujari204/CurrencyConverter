@@ -1,9 +1,5 @@
 <resources>
     <string name="app_name">CurrencyConverter</string>
-    <string name="usd">USD</string>
-    <string name="inr">INR</string>
-    <string name="inr_amount">76.33</string>
-    <string name="usd_amount">1</string>
     <string name="title">Currency Converter</string>
     <string name="title_code">Select Currency</string>
     <string name="selection_message">API is not support to selected currency code</string>

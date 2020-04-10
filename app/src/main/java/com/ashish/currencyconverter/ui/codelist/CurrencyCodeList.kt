@@ -12,6 +12,7 @@ import com.ashish.currencyconverter.databinding.ActivityCurrencyCodeListBinding
 import com.ashish.currencyconverter.ui.home.CurrencyClass
 import com.ashish.currencyconverter.ui.home.RateClass
 import com.ashish.currencyconverter.util.NavigationUtil
+import com.ashish.currencyconverter.util.Util
 import kotlinx.android.synthetic.main.activity_currency_code_list.*
 
 class CurrencyCodeList : AppCompatActivity() {
@@ -27,7 +28,7 @@ class CurrencyCodeList : AppCompatActivity() {
     }
 
     private fun initial() {
-        currencyMockArrayList = intent.getParcelableArrayListExtra("CUR_MOCK_ARRAY")
+        currencyMockArrayList = Util.getMockCountryCode(this@CurrencyCodeList)
         rateAPICodeArray = intent.getParcelableArrayListExtra("CUR_API_ARRAY")
         setDataToAdapter()
         clickEvent()

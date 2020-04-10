@@ -46,7 +46,6 @@ class CurrencyConverter : AppCompatActivity() {
         currencyArrayList = ArrayList()
         rateCodeArray = ArrayList()
 
-        loadMockCurrencyCode()
         from = Constants.getFromCode(this@CurrencyConverter)
         to = Constants.getToCode(this@CurrencyConverter)
 
@@ -176,13 +175,6 @@ class CurrencyConverter : AppCompatActivity() {
         return rateCodeArray.find { it.code == tvToCode.text.toString() }
     }
 
-
-    /**
-     * parsing mock country and code data here for show purpose
-     */
-    private fun loadMockCurrencyCode() {
-        currencyArrayList = currencyViewModel.getMockCountryCode(this@CurrencyConverter)
-    }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
