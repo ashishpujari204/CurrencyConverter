@@ -1,5 +1,6 @@
 package com.ashish.currencyconverter.rest
 
+import com.ashish.currencyconverter.BuildConfig
 import com.google.gson.GsonBuilder
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
 import okhttp3.OkHttpClient
@@ -8,9 +9,8 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 object ApiClient {
-    private val KEY = "59363ff0a3f3ca29fa9f4103"
-    val BASE_URL="https://prime.exchangerate-api.com/v5/$KEY/"
-
+    private val KEY = BuildConfig.API_KEY
+    private var BASE_URL=BuildConfig.BASE_URL+"$KEY/"
     //val BASE_URL="https://api.exchangeratesapi.io/"
     val getClient: ApiInterface
         get() {
