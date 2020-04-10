@@ -119,7 +119,7 @@ class CurrencyConverter : AppCompatActivity() {
 
     private fun getData(base: String, toCode: String, needToUpdateArray: Boolean) {
         progressBar.visibility = View.VISIBLE
-        currencyViewModel.getCurrencyData(base).observe(this@CurrencyConverter, Observer {
+        currencyViewModel.getCurrencyData(base,applicationContext).observe(this@CurrencyConverter, Observer {
             progressBar.visibility = View.GONE
             parseData(it, base, toCode, needToUpdateArray)
         })

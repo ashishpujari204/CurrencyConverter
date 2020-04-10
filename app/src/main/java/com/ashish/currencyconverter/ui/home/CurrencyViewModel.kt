@@ -10,7 +10,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.ashish.currencyconverter.R
-import com.ashish.currencyconverter.rest.ApiClient
+import com.ashish.currencyconverter.rest.RepositoryImplementation
 import com.ashish.currencyconverter.room.CurrencyRepo
 import com.ashish.currencyconverter.room.CurrencyRoomDatabase
 import com.ashish.currencyconverter.util.Constants
@@ -20,27 +20,24 @@ import com.ashish.currencyconverter.util.Constants.Companion.FROM_CURRENCY_INPUT
 import com.ashish.currencyconverter.util.Constants.Companion.TO_CURRENCY_INPUT
 import com.ashish.currencyconverter.util.NavigationUtil
 import com.ashish.currencyconverter.util.Util
-import com.google.gson.JsonObject
 import kotlinx.coroutines.*
 import org.json.JSONArray
 import org.json.JSONObject
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 
 class CurrencyViewModel(application: Application) : AndroidViewModel(application) {
 
     private val repository: CurrencyRepo
     val newRecords: LiveData<List<RateClass>>
-    var codeRateArray: ArrayList<RateClass> = ArrayList()
+    private val apiRepository: RepositoryImplementation
 
     init {
         val rateDAO = CurrencyRoomDatabase.getDatabase(application).rateDAO()
         repository = CurrencyRepo(rateDAO)
+        apiRepository = RepositoryImplementation()
         newRecords = rateDAO.getLiveRecords()
     }
 
-    fun getCode(): ArrayList<RateClass> = runBlocking(Dispatchers.Default) {
+    private fun getCode(): ArrayList<RateClass> = runBlocking(Dispatchers.Default) {
         val result = async { repository.getRates() }.await()
         return@runBlocking result as ArrayList<RateClass>
     }
@@ -57,34 +54,14 @@ class CurrencyViewModel(application: Application) : AndroidViewModel(application
     }
 
 
-    fun getCurrencyData(base: String): MutableLiveData<String> {
-        var userData = MutableLiveData<String>()
-        val dataCall: Call<JsonObject> = ApiClient.getClient.getData(base)
-        dataCall!!.enqueue(object : Callback<JsonObject> {
-            override fun onResponse(call: Call<JsonObject>, response: Response<JsonObject>) {
-                if (response.isSuccessful) {
-                    if (response.code() == 200) {
-                        userData.value = response.body().toString()
-                        insert(parseJson(response.body().toString()))
-                    } else {
-                        userData.value = null
-                    }
-                } else {
-                    userData.value = null
-                }
-            }
-
-            override fun onFailure(call: Call<JsonObject>, t: Throwable) {
-                userData.value = null
-            }
-        })
-        return userData
+    fun getCurrencyData(base: String, applicationContext: Context): MutableLiveData<String> {
+        return apiRepository.getCurrencyCodes(base, applicationContext)
     }
 
     fun swipeCurrencyCode(base: String, formCode: String, context: Context) {
         Constants.saveFromCode(context as Activity, base)
         Constants.saveToCode(context as Activity, formCode)
-        getCurrencyData(base)
+        getCurrencyData(base, context)
 
     }
 
