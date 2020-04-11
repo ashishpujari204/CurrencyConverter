@@ -4,7 +4,6 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
-import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
@@ -26,7 +25,6 @@ class CurrencyConverter : AppCompatActivity() {
     lateinit var currencyArrayList: ArrayList<CurrencyClass>
     lateinit var rateCodeArray: ArrayList<RateClass>
     lateinit var currencyViewModel: CurrencyViewModel
-    lateinit var tvFromInput: EditText
     lateinit var from: String
     lateinit var to: String
 
@@ -42,6 +40,9 @@ class CurrencyConverter : AppCompatActivity() {
         currencyArrayList = ArrayList()
         rateCodeArray = ArrayList()
 
+        /**
+         * getting stored from and to currency code from shared preference
+         */
         from = Constants.getFromCode(this@CurrencyConverter)
         to = Constants.getToCode(this@CurrencyConverter)
 
@@ -49,14 +50,17 @@ class CurrencyConverter : AppCompatActivity() {
 
     }
 
+    /**
+     * checking network calls and setup click event.
+     */
     private fun initial() {
         if (Util.verifyAvailableNetwork(this@CurrencyConverter)) {
             if (from == "NA" && to == "NA") {
                 Constants.saveFromCode(this@CurrencyConverter, DEFAULT_FROM_CODE)
                 Constants.saveToCode(this@CurrencyConverter, DEFAULT_TO_CODE)
-                getData(DEFAULT_FROM_CODE, DEFAULT_TO_CODE, false)
+                getData(DEFAULT_FROM_CODE, DEFAULT_TO_CODE)
             } else {
-                getData(from, to, false)
+                getData(from, to)
             }
         } else {
             currencyViewModel.newRecords.observe(this, Observer {
@@ -81,7 +85,7 @@ class CurrencyConverter : AppCompatActivity() {
             if (Util.verifyAvailableNetwork(this@CurrencyConverter)) {
                 Constants.saveFromCode(this@CurrencyConverter, tvToCode.text.toString())
                 Constants.saveToCode(this@CurrencyConverter, tvFromCode.text.toString())
-                getData(tvToCode.text.toString(), tvFromCode.text.toString(), true)
+                getData(tvToCode.text.toString(), tvFromCode.text.toString())
             } else {
                 showToast(resources.getString(R.string.network_connection))
             }
@@ -89,20 +93,26 @@ class CurrencyConverter : AppCompatActivity() {
 
     }
 
-    private fun getData(base: String, toCode: String, needToUpdateArray: Boolean) {
+    /**
+     * call api from view model and called parse data method.
+     */
+    private fun getData(base: String, toCode: String) {
         progressBar.visibility = View.VISIBLE
         currencyViewModel.getCurrencyData(base,applicationContext).observe(this@CurrencyConverter, Observer {
             progressBar.visibility = View.GONE
-            parseData(it, base, toCode, needToUpdateArray)
+            parseData(it, base, toCode)
         })
 
     }
 
+    /**
+     * set default result to ui and update data binding data
+     */
     private fun setDefaultDataToView(fromCode: String, toCode: String) {
-        var fromObject = rateCodeArray.find { it.code == fromCode }
-        var toObject = rateCodeArray.find { it.code == toCode }
+        val fromObject = rateCodeArray.find { it.code == fromCode }
+        val toObject = rateCodeArray.find { it.code == toCode }
 
-        var uiModelClass =
+        val uiModelClass =
             UIModelClass(fromObject!!.code, fromObject.rate, toObject!!.code, toObject.rate,fromObject.rate)
         currencyViewModel.fromInputText.set(toObject.rate)
         currencyViewModel.uiModelClassObj.set(uiModelClass)
@@ -115,8 +125,7 @@ class CurrencyConverter : AppCompatActivity() {
      */
     private fun parseData(response: String,
                           fromCode: String,
-                          toCode: String,
-                          needToUpdateArray: Boolean) {
+                          toCode: String) {
 
         if (rateCodeArray.isNotEmpty()) {
             rateCodeArray.clear()
@@ -145,7 +154,9 @@ class CurrencyConverter : AppCompatActivity() {
     }
 
 
-
+    /**
+     * get selected currency code from list and update ui
+     */
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == FROM_CURRENCY_INPUT) {
@@ -153,7 +164,7 @@ class CurrencyConverter : AppCompatActivity() {
                 val rate = data?.getParcelableExtra<RateClass>("OBJECT")
                 rate?.let {
                     Constants.saveFromCode(this@CurrencyConverter, rate.code)
-                    getData(rate.code, tvToCode.text.toString(), true)
+                    getData(rate.code, tvToCode.text.toString())
 
                 }
             }
@@ -172,8 +183,5 @@ class CurrencyConverter : AppCompatActivity() {
     private fun showToast(string: String) {
         Toast.makeText(this@CurrencyConverter, string, Toast.LENGTH_SHORT).show()
     }
-
-
-
 
 }

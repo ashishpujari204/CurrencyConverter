@@ -34,17 +34,16 @@ class CurrencyViewModel(application: Application) : AndroidViewModel(application
     private val repository: CurrencyRepo
     val newRecords: LiveData<List<RateClass>>
     private val apiRepository: RepositoryImplementation
-    var etAmount = ObservableDouble(0.0)
     var fromInputText = ObservableDouble(0.0)
-    var uiModelClassObject = UIModelClass("",0.0,"",0.0,0.0)
+    var uiModelClassObject = UIModelClass("", 0.0, "", 0.0, 0.0)
     var uiModelClassObj = ObservableField<UIModelClass>(uiModelClassObject)
+
     init {
         val rateDAO = CurrencyRoomDatabase.getDatabase(application).rateDAO()
         repository = CurrencyRepo(rateDAO)
         apiRepository = RepositoryImplementation()
         newRecords = rateDAO.getLiveRecords()
     }
-
 
 
     /**
@@ -54,19 +53,32 @@ class CurrencyViewModel(application: Application) : AndroidViewModel(application
         repository.insert(rate)
     }
 
+    /**
+     * delete all records from database
+     */
     private fun deleteAll() = viewModelScope.launch(Dispatchers.IO) {
         repository.delete()
     }
 
 
+    /**
+     * called network call here and return string response
+     */
     fun getCurrencyData(base: String, applicationContext: Context): MutableLiveData<String> {
         return apiRepository.getCurrencyCodes(base, applicationContext)
     }
-    fun getCode(): ArrayList<RateClass> = runBlocking(Dispatchers.Default) {
+
+    /**
+     * get currency code from room db.
+     */
+    private fun getCode(): ArrayList<RateClass> = runBlocking(Dispatchers.Default) {
         val result = async { repository.getRates() }.await()
         return@runBlocking result as ArrayList<RateClass>
     }
 
+    /**
+     * parse response json and return code array
+     */
     fun parseJson(response: String): ArrayList<RateClass> {
         val rateCodeArray = ArrayList<RateClass>()
         val jsonObject = JSONObject(response)
@@ -85,22 +97,27 @@ class CurrencyViewModel(application: Application) : AndroidViewModel(application
         return rateCodeArray
     }
 
-
-
+    /**
+     * on text changed method is called when user enter from amount
+     */
     fun onAmountChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-       try {
+        try {
             if (s != null && s.isNotEmpty() && getCode().isNotEmpty()) {
-                var toObject = getCode().find { it.code == uiModelClassObj.get()?.toCode.toString() }
-                var calculatedAmount = s.toString().toDouble() * toObject?.rate!!
+                val toObject =
+                    getCode().find { it.code == uiModelClassObj.get()?.toCode.toString() }
+                val calculatedAmount = s.toString().toDouble() * toObject?.rate!!
                 fromInputText.set(Util.roundOffDecimal(calculatedAmount))
             }
         } catch (e: NumberFormatException) {
         }
     }
 
+    /**
+     * get From currency code from list
+     */
     fun getFromCurrencyCode(context: Context) {
         if (Util.verifyAvailableNetwork(context as AppCompatActivity)) {
-            NavigationUtil.pickCurrencyCode(context as AppCompatActivity,FROM_CURRENCY_INPUT)
+            NavigationUtil.pickCurrencyCode(context, FROM_CURRENCY_INPUT)
         } else {
             Toast.makeText(context as Activity,
                 context.resources.getString(R.string.network_connection),
@@ -108,10 +125,11 @@ class CurrencyViewModel(application: Application) : AndroidViewModel(application
         }
     }
 
+    /**
+     * select To currency code from list
+     */
     fun getToCurrencyCode(context: Context) {
         NavigationUtil.pickCurrencyCode(context as AppCompatActivity, TO_CURRENCY_INPUT)
-
     }
-
 
 }
