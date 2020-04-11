@@ -9,11 +9,16 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.ashish.currencyconverter.R
 import com.ashish.currencyconverter.databinding.ActivityCurrencyCodeListBinding
+import com.ashish.currencyconverter.room.CurrencyRepo
+import com.ashish.currencyconverter.room.CurrencyRoomDatabase
 import com.ashish.currencyconverter.ui.home.CurrencyClass
 import com.ashish.currencyconverter.ui.home.RateClass
 import com.ashish.currencyconverter.util.NavigationUtil
 import com.ashish.currencyconverter.util.Util
 import kotlinx.android.synthetic.main.activity_currency_code_list.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.runBlocking
 
 class CurrencyCodeList : AppCompatActivity() {
 
@@ -29,7 +34,7 @@ class CurrencyCodeList : AppCompatActivity() {
 
     private fun initial() {
         currencyMockArrayList = Util.getMockCountryCode(this@CurrencyCodeList)
-        rateAPICodeArray = intent.getParcelableArrayListExtra("CUR_API_ARRAY")
+        rateAPICodeArray = getCode()
         setDataToAdapter()
         clickEvent()
     }
@@ -42,7 +47,7 @@ class CurrencyCodeList : AppCompatActivity() {
     private fun clickEvent() {
         codeAdapter.setClickListener(object : CodeListAdapter.ClickListener {
             override fun onItemClick(v: View, position: Int) {
-                var fromObject =
+                val fromObject =
                     rateAPICodeArray.find { it.code == currencyMockArrayList[position].code }
                 if (fromObject != null) {
                     NavigationUtil.backDataToHomeScreen(this@CurrencyCodeList, fromObject)
@@ -56,6 +61,13 @@ class CurrencyCodeList : AppCompatActivity() {
 
     private fun showToast(string: String) {
         Toast.makeText(this@CurrencyCodeList,string,Toast.LENGTH_SHORT).show()
+    }
+
+    fun getCode(): ArrayList<RateClass> = runBlocking(Dispatchers.Default) {
+        val rateDAO = CurrencyRoomDatabase.getDatabase(application).rateDAO()
+        val currencyRepo = CurrencyRepo(rateDAO)
+        val result = async { currencyRepo.getRates() }.await()
+        return@runBlocking result as ArrayList<RateClass>
     }
 
 

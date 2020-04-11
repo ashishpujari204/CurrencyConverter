@@ -18,9 +18,7 @@ import com.ashish.currencyconverter.util.Constants.Companion.TO_CURRENCY_INPUT
 import com.ashish.currencyconverter.util.NavigationUtil
 import com.ashish.currencyconverter.util.Util
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import org.json.JSONObject
 
 
@@ -40,13 +38,6 @@ class CurrencyViewModel(application: Application) : AndroidViewModel(application
     }
 
 
-
-
-    fun getCode(): ArrayList<RateClass> = runBlocking(Dispatchers.Default) {
-        val result = async { repository.getRates() }.await()
-        return@runBlocking result as ArrayList<RateClass>
-    }
-
     /**
      * Launching a new coroutine to insert the data in a non-blocking way
      */
@@ -65,16 +56,16 @@ class CurrencyViewModel(application: Application) : AndroidViewModel(application
 
 
     fun parseJson(response: String): ArrayList<RateClass> {
-        var rateCodeArray = ArrayList<RateClass>()
-        var jsonObject = JSONObject(response)
+        val rateCodeArray = ArrayList<RateClass>()
+        val jsonObject = JSONObject(response)
         if (jsonObject.optString(Constants.RESULT, DEFAULT_VALUE) == Constants.SUCCESS) {
             deleteAll()
-            var rateObject = jsonObject.getJSONObject(CONVERSATION_RATES)
-            var keys = rateObject.keys()
+            val rateObject = jsonObject.getJSONObject(CONVERSATION_RATES)
+            val keys = rateObject.keys()
 
             while (keys.hasNext()) {
-                var keyValue = keys.next()
-                var rateCodeObject = RateClass(0, keyValue, rateObject.optDouble(keyValue, 0.0))
+                val keyValue = keys.next()
+                val rateCodeObject = RateClass(0, keyValue, rateObject.optDouble(keyValue, 0.0))
                 rateCodeArray.add(rateCodeObject)
             }
 
@@ -97,9 +88,7 @@ class CurrencyViewModel(application: Application) : AndroidViewModel(application
 
     fun getFromCurrencyCode(context: Context) {
         if (Util.verifyAvailableNetwork(context as AppCompatActivity)) {
-            NavigationUtil.pickCurrencyCode(context as AppCompatActivity,
-                getCode(),
-                FROM_CURRENCY_INPUT)
+            NavigationUtil.pickCurrencyCode(context as AppCompatActivity,FROM_CURRENCY_INPUT)
         } else {
             Toast.makeText(context as Activity,
                 context.resources.getString(R.string.network_connection),
@@ -108,9 +97,7 @@ class CurrencyViewModel(application: Application) : AndroidViewModel(application
     }
 
     fun getToCurrencyCode(context: Context) {
-        NavigationUtil.pickCurrencyCode(context as AppCompatActivity,
-
-            getCode(), TO_CURRENCY_INPUT)
+        NavigationUtil.pickCurrencyCode(context as AppCompatActivity, TO_CURRENCY_INPUT)
 
     }
 
