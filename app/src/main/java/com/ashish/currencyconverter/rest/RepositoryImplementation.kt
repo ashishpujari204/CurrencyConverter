@@ -9,7 +9,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class RepositoryImplementation() : Repository {
+open class RepositoryImplementation() : Repository {
 
     override fun getCurrencyCodes(base: String, context: Context): MutableLiveData<String> {
         var userData = MutableLiveData<String>()
