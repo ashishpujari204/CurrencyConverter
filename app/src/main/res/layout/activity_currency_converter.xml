@@ -80,7 +80,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:text='@{uiClassObject.fromCode}'
+                    android:text='@{viewModel.uiModelClassObj.fromCode}'
                     android:fontFamily="@font/google_sans_regular"
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                     android:textColor="@color/white" />
@@ -91,7 +91,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
                     android:fontFamily="@font/google_sans_regular"
-                    android:text='@{Double.toString(uiClassObject.fromRate)}'
+                    android:text='@{Double.toString(viewModel.uiModelClassObj.fromRate)}'
                     android:textColor="@color/white"
                     android:textSize="12dp" />
             </LinearLayout>
@@ -125,7 +125,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
                     android:fontFamily="@font/google_sans_regular"
-                    android:text='@{uiClassObject.toCode}'
+                    android:text='@{viewModel.uiModelClassObj.toCode}'
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                     android:textColor="@color/white" />
 
@@ -136,7 +136,7 @@
                     android:layout_gravity="center_horizontal"
                     android:fontFamily="@font/google_sans_regular"
                     android:textColor="@color/white"
-                    android:text='@{Double.toString(uiClassObject.toRate)}'
+                    android:text='@{Double.toString(viewModel.uiModelClassObj.toRate)}'
                     android:textSize="12dp" />
             </LinearLayout>
 
@@ -159,8 +159,8 @@
                 android:layout_marginRight="20dp"
                 android:digits="0123456789."
                 android:gravity="center_horizontal"
-                android:onTextChanged="@{viewModel.onAmountTextChanged}"
-                android:text='@{Double.toString(uiClassObject.editableRate)}'
+                android:onTextChanged="@{viewModel.onAmountChanged}"
+                android:text='@{Double.toString(viewModel.uiModelClassObj.editableRate)}'
                 android:inputType="numberDecimal"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                 android:textColor="@color/faint_read"
@@ -172,7 +172,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:fontFamily="@font/google_sans_regular"
-                android:text='@{uiClassObject.fromCode}'
+                android:text='@{viewModel.uiModelClassObj.fromCode}'
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                 android:textColor="@color/white"
                 android:textStyle="bold" />
@@ -196,7 +196,7 @@
                 android:fontFamily="@font/google_sans_regular"
                 android:gravity="center_horizontal"
                 android:inputType="number"
-                android:text='@{Double.toString(uiClassObject.toRate)}'
+                android:text='@{Double.toString(viewModel.fromInputText)}'
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                 android:textColor="@color/faint_read"
                 android:textColorHint="@color/faint_read"></TextView>
@@ -207,7 +207,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:fontFamily="@font/google_sans_regular"
-                android:text='@{uiClassObject.toCode}'
+                android:text='@{viewModel.uiModelClassObj.toCode}'
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                 android:textColor="@color/white"
                 android:textStyle="bold" />

@@ -36,7 +36,7 @@ class Util {
             return json
         }
 
-        fun roundOffDecimal(number: Double): Double? {
+        fun roundOffDecimal(number: Double): Double {
             val df = DecimalFormat("#.##")
             df.roundingMode = RoundingMode.CEILING
             return df.format(number).toDouble()
