@@ -147,7 +147,7 @@ dependencies {
   ```
   
  # Usage
-  Used MVVM + Repository + Room + Retrofit
+  Used MVVM + Repository + Room + Retrofit + Databinding + LiveData
  
 # Screenshots
 
