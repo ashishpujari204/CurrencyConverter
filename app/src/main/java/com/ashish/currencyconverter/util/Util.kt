@@ -21,7 +21,7 @@ class Util {
             return networkInfo != null && networkInfo.isConnected
         }
 
-        fun getAssetJsonData(context: Context): String? {
+        private fun getAssetJsonData(context: Context): String? {
             val json: String
             try {
                 val inputStream = context.assets.open("currency.json")
