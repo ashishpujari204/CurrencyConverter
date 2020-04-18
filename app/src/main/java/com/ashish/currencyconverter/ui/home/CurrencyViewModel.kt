@@ -7,14 +7,11 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.ObservableDouble
 import androidx.databinding.ObservableField
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import com.ashish.currencyconverter.R
 import com.ashish.currencyconverter.rest.RepositoryImplementation
 import com.ashish.currencyconverter.room.CurrencyRepo
-import com.ashish.currencyconverter.room.CurrencyRoomDatabase
+import com.ashish.currencyconverter.room.RateDAO
 import com.ashish.currencyconverter.util.Constants
 import com.ashish.currencyconverter.util.Constants.Companion.CONVERSATION_RATES
 import com.ashish.currencyconverter.util.Constants.Companion.DEFAULT_VALUE
@@ -23,28 +20,22 @@ import com.ashish.currencyconverter.util.Constants.Companion.TO_CURRENCY_INPUT
 import com.ashish.currencyconverter.util.NavigationUtil
 import com.ashish.currencyconverter.util.Util
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withContext
 import org.json.JSONObject
 
 
-class CurrencyViewModel(application: Application) : AndroidViewModel(application) {
+open class CurrencyViewModel(application: Application,
+                             private val repositoryImplementation: RepositoryImplementation,
+                             private val rateDAO: RateDAO) : AndroidViewModel(application) {
 
-    private val repository: CurrencyRepo
-    val newRecords: LiveData<List<RateClass>>
-    private val apiRepository: RepositoryImplementation
+
+    private val repository: CurrencyRepo = CurrencyRepo(rateDAO)
+    val newRecords: LiveData<List<RateClass>> = rateDAO.getLiveRecords()
     var fromInputText = ObservableDouble(0.0)
     var uiModelClassObject = UIModelClass("", 0.0, "", 0.0, 0.0)
     var uiModelClassObj = ObservableField<UIModelClass>(uiModelClassObject)
-
-    init {
-        val rateDAO = CurrencyRoomDatabase.getDatabase(application).rateDAO()
-        repository = CurrencyRepo(rateDAO)
-        apiRepository = RepositoryImplementation()
-        newRecords = rateDAO.getLiveRecords()
-    }
-
 
     /**
      * Launching a new coroutine to insert the data in a non-blocking way
@@ -65,14 +56,14 @@ class CurrencyViewModel(application: Application) : AndroidViewModel(application
      * called network call here and return string response
      */
     fun getCurrencyData(base: String, applicationContext: Context): MutableLiveData<String> {
-        return apiRepository.getCurrencyCodes(base, applicationContext)
+        return repositoryImplementation.getCurrencyCodes(base, applicationContext)
     }
 
     /**
      * get currency code from room db.
      */
     private fun getCode(): ArrayList<RateClass> = runBlocking(Dispatchers.Default) {
-        val result = async { repository.getRates() }.await()
+        val result = withContext(Dispatchers.Default) { repository.getRates() }
         return@runBlocking result as ArrayList<RateClass>
     }
 
@@ -109,6 +100,8 @@ class CurrencyViewModel(application: Application) : AndroidViewModel(application
                 fromInputText.set(Util.roundOffDecimal(calculatedAmount))
             }
         } catch (e: NumberFormatException) {
+        } catch (e1: KotlinNullPointerException) {
+
         }
     }
 

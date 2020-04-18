@@ -17,8 +17,9 @@ import com.ashish.currencyconverter.util.NavigationUtil
 import com.ashish.currencyconverter.util.Util
 import kotlinx.android.synthetic.main.activity_currency_code_list.*
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withContext
+import org.koin.android.ext.android.inject
 
 class CurrencyCodeList : AppCompatActivity() {
 
@@ -26,6 +27,7 @@ class CurrencyCodeList : AppCompatActivity() {
     lateinit var rateAPICodeArray: ArrayList<RateClass>
     lateinit var codeAdapter: CodeListAdapter
     lateinit var currencyCodeListBinding: ActivityCurrencyCodeListBinding
+    private val currencyRoomDatabase : CurrencyRoomDatabase by inject()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         currencyCodeListBinding=DataBindingUtil.setContentView(this,R.layout.activity_currency_code_list)
@@ -63,10 +65,11 @@ class CurrencyCodeList : AppCompatActivity() {
         Toast.makeText(this@CurrencyCodeList,string,Toast.LENGTH_SHORT).show()
     }
 
-    fun getCode(): ArrayList<RateClass> = runBlocking(Dispatchers.Default) {
-        val rateDAO = CurrencyRoomDatabase.getDatabase(application).rateDAO()
+    private fun getCode(): ArrayList<RateClass> = runBlocking(Dispatchers.Default) {
+        val rateDAO = currencyRoomDatabase.rateDAO()
         val currencyRepo = CurrencyRepo(rateDAO)
-        val result = async { currencyRepo.getRates() }.await()
+        val result =
+            withContext(Dispatchers.Default) { currencyRepo.getRates() }
         return@runBlocking result as ArrayList<RateClass>
     }
 

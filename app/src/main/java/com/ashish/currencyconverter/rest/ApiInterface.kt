@@ -9,7 +9,7 @@ interface ApiInterface {
 
 
     @GET("latest/{base}")
-    fun getData(
+     fun getData(
         @Path("base") base: String?
     ): Call<JsonObject>
 

@@ -65,7 +65,6 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
     androidTestImplementation 'androidx.test:runner:1.1.1'
-
     //android x
     implementation 'androidx.annotation:annotation:1.1.0'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
@@ -126,12 +125,11 @@ dependencies {
     }
 
     //koin
-    // Koin AndroidX Scope features
     implementation "org.koin:koin-androidx-scope:$koin_version"
-    // Koin AndroidX ViewModel features
     implementation "org.koin:koin-androidx-viewmodel:$koin_version"
-    // Koin AndroidX Fragment features
     implementation "org.koin:koin-androidx-fragment:$koin_version"
-    // Koin AndroidX Experimental features
     implementation "org.koin:koin-androidx-ext:$koin_version"
+    implementation "org.koin:koin-android:$koin_version"
+    implementation "org.koin:koin-android-architecture:0.9.1-alpha-5"
+    androidTestImplementation "org.koin:koin-test:$koin_version"
 }

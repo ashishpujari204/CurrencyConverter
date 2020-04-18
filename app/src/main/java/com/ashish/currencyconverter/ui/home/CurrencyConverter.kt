@@ -8,7 +8,6 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import com.ashish.currencyconverter.R
 import com.ashish.currencyconverter.databinding.ActivityCurrencyConverterBinding
 import com.ashish.currencyconverter.util.Constants
@@ -18,15 +17,18 @@ import com.ashish.currencyconverter.util.Constants.Companion.FROM_CURRENCY_INPUT
 import com.ashish.currencyconverter.util.Constants.Companion.TO_CURRENCY_INPUT
 import com.ashish.currencyconverter.util.Util
 import kotlinx.android.synthetic.main.activity_currency_converter.*
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
 class CurrencyConverter : AppCompatActivity() {
 
-    lateinit var currencyArrayList: ArrayList<CurrencyClass>
-    lateinit var rateCodeArray: ArrayList<RateClass>
-    lateinit var currencyViewModel: CurrencyViewModel
+    private val currencyViewModel by viewModel<CurrencyViewModel>()
+
     lateinit var from: String
     lateinit var to: String
+
+    lateinit var currencyArrayList: ArrayList<CurrencyClass>
+    lateinit var rateCodeArray: ArrayList<RateClass>
 
     lateinit var activityCurrencyConverterBinding: ActivityCurrencyConverterBinding
 
@@ -34,8 +36,6 @@ class CurrencyConverter : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         activityCurrencyConverterBinding =
             DataBindingUtil.setContentView(this, R.layout.activity_currency_converter)
-        currencyViewModel =
-            ViewModelProvider(this@CurrencyConverter).get(CurrencyViewModel::class.java)
         activityCurrencyConverterBinding.viewModel = currencyViewModel
         currencyArrayList = ArrayList()
         rateCodeArray = ArrayList()

@@ -3,23 +3,24 @@ package com.ashish.currencyconverter.rest
 import android.app.Application
 import android.content.Context
 import androidx.lifecycle.MutableLiveData
+import com.ashish.currencyconverter.room.RateDAO
 import com.ashish.currencyconverter.ui.home.CurrencyViewModel
 import com.google.gson.JsonObject
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-open class RepositoryImplementation() : Repository {
+open class RepositoryImplementation(var apiInterface: ApiInterface,val rateDAO: RateDAO) {
 
-    override fun getCurrencyCodes(base: String, context: Context): MutableLiveData<String> {
-        var userData = MutableLiveData<String>()
-        val dataCall: Call<JsonObject> = ApiClient.getClient.getData(base)
-        dataCall!!.enqueue(object : Callback<JsonObject> {
+    fun getCurrencyCodes(base: String, context: Context): MutableLiveData<String> {
+        val userData = MutableLiveData<String>()
+
+        apiInterface.getData(base).enqueue(object : Callback<JsonObject> {
             override fun onResponse(call: Call<JsonObject>, response: Response<JsonObject>) {
                 if (response.isSuccessful) {
                     if (response.code() == 200) {
                         userData.value = response.body().toString()
-                        parseJson(response.body().toString(), context)
+                        parseJson(response.body().toString(), context,rateDAO)
                     } else {
                         userData.value = null
                     }
@@ -35,9 +36,10 @@ open class RepositoryImplementation() : Repository {
         return userData
     }
 
-
-    private fun parseJson(response: String, context: Context) {
-        val currencyViewModel = CurrencyViewModel(context as Application)
+    private fun parseJson(response: String,
+                          context: Context,
+                          rateDAO: RateDAO) {
+        val currencyViewModel = CurrencyViewModel(context as Application, this,rateDAO)
         currencyViewModel.insert(currencyViewModel.parseJson(response))
     }
 
