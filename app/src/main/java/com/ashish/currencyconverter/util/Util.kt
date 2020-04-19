@@ -55,15 +55,15 @@ class Util {
             return df.format(number).toDouble()
         }
         fun getMockCountryCode(activity: Activity): ArrayList<CurrencyClass> {
-            var currencyArray = JSONArray(getAssetJsonData(activity))
-            var currencyArrayList = ArrayList<CurrencyClass>()
+            val currencyArray = JSONArray(getAssetJsonData(activity))
+            val currencyArrayList = ArrayList<CurrencyClass>()
             for (i in 0 until currencyArray.length()) {
                 val currencyObjects = currencyArray.getJSONObject(i)
-                var keys = currencyObjects.keys()
+                val keys = currencyObjects.keys()
                 while (keys.hasNext()) {
-                    var key = keys.next()
-                    var currencyObject = currencyObjects.getJSONObject(key)
-                    var currencyModel = CurrencyClass()
+                    val key = keys.next()
+                    val currencyObject = currencyObjects.getJSONObject(key)
+                    val currencyModel = CurrencyClass()
                     currencyModel.name = currencyObject.optString("name", DEFAULT_VALUE)
                     currencyModel.symbol = currencyObject.optString("symbol", DEFAULT_VALUE)
                     currencyModel.symbolNative =

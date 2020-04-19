@@ -9,7 +9,6 @@ import androidx.test.filters.LargeTest
 import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner
 import androidx.test.rule.ActivityTestRule
 import com.ashish.currencyconverter.rest.RepositoryImplementation
-import com.ashish.currencyconverter.room.CurrencyRoomDatabase
 import com.ashish.currencyconverter.ui.home.CurrencyConverter
 import com.ashish.currencyconverter.util.Constants
 import junit.framework.Assert.assertNotNull
@@ -29,7 +28,6 @@ class CurrencyConverterTest : KoinTest {
     private lateinit var stringToBetyped: String
 
     private val repoImpl: RepositoryImplementation by inject()
-    private val currencyRoomDatabase : CurrencyRoomDatabase by inject()
     @get:Rule
     var activityRule: ActivityTestRule<CurrencyConverter> =
         ActivityTestRule(CurrencyConverter::class.java)

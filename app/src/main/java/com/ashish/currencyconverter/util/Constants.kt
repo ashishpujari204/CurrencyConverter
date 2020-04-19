@@ -20,8 +20,8 @@ class Constants {
         const val RESULT = "result"
         const val CONVERSATION_RATES = "conversion_rates"
 
-        const val FROM_CODE = "from_code"
-        const val TO_CODE = "to_code"
+        private const val FROM_CODE = "from_code"
+        private const val TO_CODE = "to_code"
 
         const val DEFAULT_FROM_CODE: String = "INR"
         const val DEFAULT_TO_CODE: String = "USD"
@@ -29,13 +29,11 @@ class Constants {
         const val TO_CURRENCY_INPUT: Int = 2
 
         fun saveFromCode(activity: Activity, fromCode: String) {
-            var storageRef = SharedPreferencesStorage(activity)
-            storageRef.setString(FROM_CODE, fromCode)
+            SharedPreferencesStorage(activity).setString(FROM_CODE, fromCode)
         }
 
         fun saveToCode(activity: Activity, toCode: String) {
-            var storageRef = SharedPreferencesStorage(activity)
-            storageRef.setString(TO_CODE, toCode)
+            SharedPreferencesStorage(activity).setString(TO_CODE, toCode)
         }
 
         fun getFromCode(activity: Activity): String {

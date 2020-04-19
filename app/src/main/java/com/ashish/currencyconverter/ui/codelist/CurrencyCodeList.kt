@@ -25,8 +25,8 @@ class CurrencyCodeList : AppCompatActivity() {
 
     lateinit var currencyMockArrayList: ArrayList<CurrencyClass>
     lateinit var rateAPICodeArray: ArrayList<RateClass>
-    lateinit var codeAdapter: CodeListAdapter
-    lateinit var currencyCodeListBinding: ActivityCurrencyCodeListBinding
+    private lateinit var codeAdapter: CodeListAdapter
+    private lateinit var currencyCodeListBinding: ActivityCurrencyCodeListBinding
     private val currencyRoomDatabase : CurrencyRoomDatabase by inject()
 
     override fun onCreate(savedInstanceState: Bundle?) {

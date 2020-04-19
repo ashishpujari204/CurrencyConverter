@@ -8,7 +8,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-open class RepositoryImplementation(var apiInterface: ApiInterface, val rateDAO: RateDAO) {
+open class RepositoryImplementation(private var apiInterface: ApiInterface, val rateDAO: RateDAO) {
 
     fun getCurrencyCodes(base: String): MutableLiveData<String> {
         val userData = MutableLiveData<String>()

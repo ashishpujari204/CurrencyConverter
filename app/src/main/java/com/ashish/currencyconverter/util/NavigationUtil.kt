@@ -9,7 +9,7 @@ class NavigationUtil {
     companion object {
         fun pickCurrencyCode(activity: Activity,
                              fromCurrencyInputCode: Int) {
-            var intent = Intent(activity, CurrencyCodeList::class.java)
+            val intent = Intent(activity, CurrencyCodeList::class.java)
             activity.startActivityForResult(intent, fromCurrencyInputCode)
         }
 

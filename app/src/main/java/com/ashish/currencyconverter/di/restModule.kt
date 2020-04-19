@@ -35,9 +35,9 @@ val retrofitModule = module {
 
 
     fun provideRetrofit(factory: Gson, client: OkHttpClient): Retrofit {
-         val KEY = BuildConfig.API_KEY
-         var BASE_URL=BuildConfig.BASE_URL+"$KEY/"
-        return Retrofit.Builder().baseUrl(BASE_URL)
+         val key = BuildConfig.API_KEY
+         val baseUrl=BuildConfig.BASE_URL+"$key/"
+        return Retrofit.Builder().baseUrl(baseUrl)
             .addConverterFactory(GsonConverterFactory.create(factory))
             .addCallAdapterFactory(CoroutineCallAdapterFactory()).client(client).build()
     }

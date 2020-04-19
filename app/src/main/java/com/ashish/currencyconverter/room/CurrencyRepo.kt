@@ -10,8 +10,6 @@ class CurrencyRepo(private val currencyDAO: RateDAO) {
 
     fun getRates() = currencyDAO.getCodes()
 
-    val rates: LiveData<List<RateClass>> = currencyDAO.getLiveRecords()
-
     suspend fun insert(rate: List<RateClass>) {
         currencyDAO.insert(rate)
     }

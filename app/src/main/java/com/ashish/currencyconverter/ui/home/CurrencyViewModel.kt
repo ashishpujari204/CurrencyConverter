@@ -32,7 +32,7 @@ open class CurrencyViewModel(private val repositoryImplementation: RepositoryImp
     private val repository: CurrencyRepo = CurrencyRepo(rateDAO)
     val newRecords: LiveData<List<RateClass>> = rateDAO.getLiveRecords()
     var fromInputText = ObservableDouble(0.0)
-    var uiModelClassObject = UIModelClass("", 0.0, "", 0.0, 0.0)
+    private var uiModelClassObject = UIModelClass("", 0.0, "", 0.0, 0.0)
     var uiModelClassObj = ObservableField<UIModelClass>(uiModelClassObject)
 
     /**

@@ -24,13 +24,13 @@ class CurrencyConverter : AppCompatActivity() {
 
     private val currencyViewModel by viewModel<CurrencyViewModel>()
 
-    lateinit var from: String
-    lateinit var to: String
+    private lateinit var from: String
+    private lateinit var to: String
 
-    lateinit var currencyArrayList: ArrayList<CurrencyClass>
-    lateinit var rateCodeArray: ArrayList<RateClass>
+    private lateinit var currencyArrayList: ArrayList<CurrencyClass>
+    private lateinit var rateCodeArray: ArrayList<RateClass>
 
-    lateinit var activityCurrencyConverterBinding: ActivityCurrencyConverterBinding
+    private lateinit var activityCurrencyConverterBinding: ActivityCurrencyConverterBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         activityCurrencyConverterBinding =
