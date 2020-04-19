@@ -1,7 +1,5 @@
 package com.ashish.currencyconverter.rest
 
-import android.app.Application
-import android.content.Context
 import androidx.lifecycle.MutableLiveData
 import com.ashish.currencyconverter.room.RateDAO
 import com.ashish.currencyconverter.ui.home.CurrencyViewModel
@@ -12,7 +10,7 @@ import retrofit2.Response
 
 open class RepositoryImplementation(var apiInterface: ApiInterface,val rateDAO: RateDAO) {
 
-    fun getCurrencyCodes(base: String, context: Context): MutableLiveData<String> {
+    fun getCurrencyCodes(base: String): MutableLiveData<String> {
         val userData = MutableLiveData<String>()
 
         apiInterface.getData(base).enqueue(object : Callback<JsonObject> {

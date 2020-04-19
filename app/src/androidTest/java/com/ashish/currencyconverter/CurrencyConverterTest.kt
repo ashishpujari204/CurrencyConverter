@@ -76,8 +76,7 @@ class CurrencyConverterTest : KoinTest {
     @Test
     fun testAPI() {
         Thread.sleep(3000)
-        assertNotNull(repoImpl.getCurrencyCodes(Constants.DEFAULT_FROM_CODE,
-            activityRule.activity.applicationContext).value.toString())
+        assertNotNull(repoImpl.getCurrencyCodes(Constants.DEFAULT_FROM_CODE).value.toString())
     }
 
 

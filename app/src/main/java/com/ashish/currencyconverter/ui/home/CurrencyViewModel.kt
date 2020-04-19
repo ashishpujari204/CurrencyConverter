@@ -53,8 +53,8 @@ open class CurrencyViewModel(private val repositoryImplementation: RepositoryImp
     /**
      * called network call here and return string response
      */
-    fun getCurrencyData(base: String, applicationContext: Context): MutableLiveData<String> {
-        return repositoryImplementation.getCurrencyCodes(base, applicationContext)
+    fun getCurrencyData(base: String): MutableLiveData<String> {
+        return repositoryImplementation.getCurrencyCodes(base)
     }
 
     /**

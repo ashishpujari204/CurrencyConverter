@@ -8,7 +8,7 @@ class CurrencyRepo(private val currencyDAO: RateDAO) {
     // Observed LiveData will notify the observer when the data has changed.
  //   suspend fun   allCodes: List<RateClass> = currencyDAO.getCodes()
 
-    fun getRates() = currencyDAO.getCodes() as List<RateClass>
+    fun getRates() = currencyDAO.getCodes()
 
     val rates: LiveData<List<RateClass>> = currencyDAO.getLiveRecords()
 

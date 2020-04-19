@@ -3,7 +3,8 @@ package com.ashish.currencyconverter.util
 import android.app.Activity
 import android.content.Context
 import android.net.ConnectivityManager
-import androidx.appcompat.app.AppCompatActivity
+import android.net.NetworkCapabilities
+import android.os.Build
 import com.ashish.currencyconverter.ui.home.CurrencyClass
 import com.ashish.currencyconverter.util.Constants.Companion.DEFAULT_VALUE
 import org.json.JSONArray
@@ -14,13 +15,25 @@ import java.text.DecimalFormat
 class Util {
 
     companion object {
-        fun verifyAvailableNetwork(activity: AppCompatActivity): Boolean {
-            val connectivityManager =
-                activity.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-            val networkInfo = connectivityManager.activeNetworkInfo
-            return networkInfo != null && networkInfo.isConnected
+        fun verifyAvailableNetwork(context: Context): Boolean {
+            val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                val nw      = connectivityManager.activeNetwork ?: return false
+                val actNw = connectivityManager.getNetworkCapabilities(nw) ?: return false
+                return when {
+                    actNw.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) -> true
+                    actNw.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) -> true
+                    //for other device how are able to connect with Ethernet
+                    actNw.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET) -> true
+                    //for check internet over Bluetooth
+                    actNw.hasTransport(NetworkCapabilities.TRANSPORT_BLUETOOTH) -> true
+                    else -> false
+                }
+            } else {
+                val nwInfo = connectivityManager.activeNetworkInfo ?: return false
+                return nwInfo.isConnected
+            }
         }
-
         private fun getAssetJsonData(context: Context): String? {
             val json: String
             try {

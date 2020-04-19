@@ -31,7 +31,6 @@ class CurrencyConverter : AppCompatActivity() {
     lateinit var rateCodeArray: ArrayList<RateClass>
 
     lateinit var activityCurrencyConverterBinding: ActivityCurrencyConverterBinding
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         activityCurrencyConverterBinding =
@@ -63,6 +62,7 @@ class CurrencyConverter : AppCompatActivity() {
                 getData(from, to)
             }
         } else {
+            progressBar.visibility = View.GONE
             currencyViewModel.newRecords.observe(this, Observer {
                 rateCodeArray.addAll(it)
                 if (rateCodeArray.isNotEmpty()) {
@@ -98,10 +98,11 @@ class CurrencyConverter : AppCompatActivity() {
      */
     private fun getData(base: String, toCode: String) {
         progressBar.visibility = View.VISIBLE
-        currencyViewModel.getCurrencyData(base,applicationContext).observe(this@CurrencyConverter, Observer {
-            progressBar.visibility = View.GONE
-            parseData(it, base, toCode)
-        })
+        currencyViewModel.getCurrencyData(base)
+            .observe(this@CurrencyConverter, Observer {
+                progressBar.visibility = View.GONE
+                parseData(it, base, toCode)
+            })
 
     }
 
@@ -112,20 +113,21 @@ class CurrencyConverter : AppCompatActivity() {
         val fromObject = rateCodeArray.find { it.code == fromCode }
         val toObject = rateCodeArray.find { it.code == toCode }
 
-        val uiModelClass =
-            UIModelClass(fromObject!!.code, fromObject.rate, toObject!!.code, toObject.rate,fromObject.rate)
+        val uiModelClass = UIModelClass(fromObject!!.code,
+            fromObject.rate,
+            toObject!!.code,
+            toObject.rate,
+            fromObject.rate)
         currencyViewModel.fromInputText.set(toObject.rate)
         currencyViewModel.uiModelClassObj.set(uiModelClass)
         activityCurrencyConverterBinding.uiClassObject = uiModelClass
-        tvToCode.text = toObject?.code
+        tvToCode.text = toObject.code
     }
 
     /**
      * parse api response
      */
-    private fun parseData(response: String,
-                          fromCode: String,
-                          toCode: String) {
+    private fun parseData(response: String, fromCode: String, toCode: String) {
 
         if (rateCodeArray.isNotEmpty()) {
             rateCodeArray.clear()

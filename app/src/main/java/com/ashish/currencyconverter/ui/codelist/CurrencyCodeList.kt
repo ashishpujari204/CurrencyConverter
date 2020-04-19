@@ -28,6 +28,7 @@ class CurrencyCodeList : AppCompatActivity() {
     lateinit var codeAdapter: CodeListAdapter
     lateinit var currencyCodeListBinding: ActivityCurrencyCodeListBinding
     private val currencyRoomDatabase : CurrencyRoomDatabase by inject()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         currencyCodeListBinding=DataBindingUtil.setContentView(this,R.layout.activity_currency_code_list)

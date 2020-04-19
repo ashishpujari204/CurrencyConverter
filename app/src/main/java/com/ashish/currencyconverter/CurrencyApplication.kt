@@ -15,7 +15,11 @@ class CurrencyApplication : Application() {
         startKoin {
             androidContext(this@CurrencyApplication)
             androidLogger(Level.DEBUG)
-            modules(listOf(viewModelModule,retrofitModule, roomDatabaseModule,repoImplementation))
+            modules(listOf(viewModelModule,
+                retrofitModule,
+                roomDatabaseModule,
+                repoImplementation,
+                sharedPreferencesModule))
         }
     }
 }
