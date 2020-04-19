@@ -127,7 +127,6 @@ dependencies {
     //koin
     implementation "org.koin:koin-androidx-scope:$koin_version"
     implementation "org.koin:koin-androidx-viewmodel:$koin_version"
-    implementation "org.koin:koin-androidx-fragment:$koin_version"
     implementation "org.koin:koin-androidx-ext:$koin_version"
     implementation "org.koin:koin-android:$koin_version"
     implementation "org.koin:koin-android-architecture:0.9.1-alpha-5"
