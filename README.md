@@ -4,7 +4,7 @@
 [![](https://img.shields.io/badge/Support-Linkedin-brightgreen)](https://in.linkedin.com/in/ashish-pujari-b2655166)
 # Project Title 
 
-Currency Convertor : It's simple currency convertor app, implemented using kotlin.
+Currency Converter : It's simple currency convertor app, implemented using kotlin.
 
 # Prerequisites
 
