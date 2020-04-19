@@ -155,7 +155,7 @@ class CurrencyConverter : AppCompatActivity() {
 
 
     /**
-     * get selected currency code from list and update ui
+     * get selected currency code from list and update to ui
      */
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)

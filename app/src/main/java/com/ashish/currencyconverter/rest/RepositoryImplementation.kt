@@ -20,7 +20,7 @@ open class RepositoryImplementation(var apiInterface: ApiInterface,val rateDAO: 
                 if (response.isSuccessful) {
                     if (response.code() == 200) {
                         userData.value = response.body().toString()
-                        parseJson(response.body().toString(), context,rateDAO)
+                        parseJson(response.body().toString(),rateDAO)
                     } else {
                         userData.value = null
                     }
@@ -37,9 +37,8 @@ open class RepositoryImplementation(var apiInterface: ApiInterface,val rateDAO: 
     }
 
     private fun parseJson(response: String,
-                          context: Context,
                           rateDAO: RateDAO) {
-        val currencyViewModel = CurrencyViewModel(context as Application, this,rateDAO)
+        val currencyViewModel = CurrencyViewModel(this,rateDAO)
         currencyViewModel.insert(currencyViewModel.parseJson(response))
     }
 

@@ -1,7 +1,6 @@
 package com.ashish.currencyconverter.ui.home
 
 import android.app.Activity
-import android.app.Application
 import android.content.Context
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -26,9 +25,8 @@ import kotlinx.coroutines.withContext
 import org.json.JSONObject
 
 
-open class CurrencyViewModel(application: Application,
-                             private val repositoryImplementation: RepositoryImplementation,
-                             private val rateDAO: RateDAO) : AndroidViewModel(application) {
+open class CurrencyViewModel(private val repositoryImplementation: RepositoryImplementation,
+                             private val rateDAO: RateDAO) : ViewModel() {
 
 
     private val repository: CurrencyRepo = CurrencyRepo(rateDAO)
@@ -83,7 +81,6 @@ open class CurrencyViewModel(application: Application,
                 val rateCodeObject = RateClass(0, keyValue, rateObject.optDouble(keyValue, 0.0))
                 rateCodeArray.add(rateCodeObject)
             }
-
         }
         return rateCodeArray
     }
