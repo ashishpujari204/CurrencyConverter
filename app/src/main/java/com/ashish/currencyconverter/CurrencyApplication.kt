@@ -18,8 +18,7 @@ class CurrencyApplication : Application() {
             modules(listOf(viewModelModule,
                 retrofitModule,
                 roomDatabaseModule,
-                repoImplementation,
-                sharedPreferencesModule))
+                repoImplementation))
         }
     }
 }

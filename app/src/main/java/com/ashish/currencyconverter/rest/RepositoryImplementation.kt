@@ -8,17 +8,16 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-open class RepositoryImplementation(var apiInterface: ApiInterface,val rateDAO: RateDAO) {
+open class RepositoryImplementation(var apiInterface: ApiInterface, val rateDAO: RateDAO) {
 
     fun getCurrencyCodes(base: String): MutableLiveData<String> {
         val userData = MutableLiveData<String>()
-
         apiInterface.getData(base).enqueue(object : Callback<JsonObject> {
             override fun onResponse(call: Call<JsonObject>, response: Response<JsonObject>) {
                 if (response.isSuccessful) {
                     if (response.code() == 200) {
                         userData.value = response.body().toString()
-                        parseJson(response.body().toString(),rateDAO)
+                        parseJson(response.body().toString(), rateDAO)
                     } else {
                         userData.value = null
                     }
@@ -34,9 +33,8 @@ open class RepositoryImplementation(var apiInterface: ApiInterface,val rateDAO: 
         return userData
     }
 
-    private fun parseJson(response: String,
-                          rateDAO: RateDAO) {
-        val currencyViewModel = CurrencyViewModel(this,rateDAO)
+    private fun parseJson(response: String, rateDAO: RateDAO) {
+        val currencyViewModel = CurrencyViewModel(this, rateDAO)
         currencyViewModel.insert(currencyViewModel.parseJson(response))
     }
 
