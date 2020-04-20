@@ -5,6 +5,7 @@
 # Project Title 
 
 Currency Converter : It's simple currency convertor app, implemented using kotlin.
+Implemented using MVVM + Repository + Room + Retrofit + Databinding + LiveData + Koin.
 
 # Prerequisites
 
