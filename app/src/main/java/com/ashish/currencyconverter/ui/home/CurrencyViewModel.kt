@@ -1,43 +1,39 @@
 package com.ashish.currencyconverter.ui.home
 
 import android.app.Activity
-import android.app.Application
-import android.util.Log
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.viewModelScope
-import com.ashish.currencyconverter.rest.ApiClient
+import android.content.Context
+import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+import androidx.databinding.ObservableDouble
+import androidx.databinding.ObservableField
+import androidx.lifecycle.*
+import com.ashish.currencyconverter.R
+import com.ashish.currencyconverter.rest.RepositoryImplementation
 import com.ashish.currencyconverter.room.CurrencyRepo
-import com.ashish.currencyconverter.room.CurrencyRoomDatabase
+import com.ashish.currencyconverter.room.RateDAO
 import com.ashish.currencyconverter.util.Constants
 import com.ashish.currencyconverter.util.Constants.Companion.CONVERSATION_RATES
 import com.ashish.currencyconverter.util.Constants.Companion.DEFAULT_VALUE
+import com.ashish.currencyconverter.util.Constants.Companion.FROM_CURRENCY_INPUT
+import com.ashish.currencyconverter.util.Constants.Companion.TO_CURRENCY_INPUT
+import com.ashish.currencyconverter.util.NavigationUtil
 import com.ashish.currencyconverter.util.Util
-import com.google.gson.JsonObject
-import kotlinx.coroutines.*
-import org.json.JSONArray
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withContext
 import org.json.JSONObject
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
-import java.util.concurrent.Executors
 
-class CurrencyViewModel(application: Application) : AndroidViewModel(application) {
 
-    private val repository: CurrencyRepo
-    val newRecords: LiveData<List<RateClass>>
+open class CurrencyViewModel(private val repositoryImplementation: RepositoryImplementation,
+                             private val rateDAO: RateDAO) : ViewModel() {
 
-    init {
-        val rateDAO = CurrencyRoomDatabase.getDatabase(application).rateDAO()
-        repository = CurrencyRepo(rateDAO)
-        newRecords = rateDAO.getLiveRecords()
-    }
 
-    fun getCode(): ArrayList<RateClass> = runBlocking(Dispatchers.Default) {
-        val result = async { repository.getRates() }.await()
-        return@runBlocking result as ArrayList<RateClass>
-    }
+    private val repository: CurrencyRepo = CurrencyRepo(rateDAO)
+    val newRecords: LiveData<List<RateClass>> = rateDAO.getLiveRecords()
+    var fromInputText = ObservableDouble(0.0)
+    private var uiModelClassObject = UIModelClass("", 0.0, "", 0.0, 0.0)
+    var uiModelClassObj = ObservableField<UIModelClass>(uiModelClassObject)
 
     /**
      * Launching a new coroutine to insert the data in a non-blocking way
@@ -46,78 +42,84 @@ class CurrencyViewModel(application: Application) : AndroidViewModel(application
         repository.insert(rate)
     }
 
-    fun deleteAll() = viewModelScope.launch(Dispatchers.IO) {
+    /**
+     * delete all records from database
+     */
+    private fun deleteAll() = viewModelScope.launch(Dispatchers.IO) {
         repository.delete()
     }
 
-    fun rowCount(): Int = runBlocking(Dispatchers.Default) {
-        return@runBlocking async { repository.getRowCount() }.await()
-    }
 
+    /**
+     * called network call here and return string response
+     */
     fun getCurrencyData(base: String): MutableLiveData<String> {
-        var userData = MutableLiveData<String>()
-        val dataCall: Call<JsonObject> = ApiClient.getClient.getData(base)
-        dataCall!!.enqueue(object : Callback<JsonObject> {
-            override fun onResponse(call: Call<JsonObject>, response: Response<JsonObject>) {
-
-                if (response.isSuccessful) {
-                    if (response.code() == 200) {
-                        userData.value = response.body().toString()
-
-                        insert(parseJson(response.body().toString()))
-                    } else {
-                        userData.value = null
-                    }
-                } else {
-                    userData.value = null
-                }
-            }
-
-            override fun onFailure(call: Call<JsonObject>, t: Throwable) {
-                userData.value = null
-            }
-        })
-        return userData
+        return repositoryImplementation.getCurrencyCodes(base)
     }
 
-    fun parseJson(response : String) : ArrayList<RateClass>{
-        var rateCodeArray = ArrayList<RateClass>()
-        var jsonObject = JSONObject(response)
-        if (jsonObject.optString(Constants.RESULT,
-                DEFAULT_VALUE) == Constants.SUCCESS) {
+    /**
+     * get currency code from room db.
+     */
+    private fun getCode(): ArrayList<RateClass> = runBlocking(Dispatchers.Default) {
+        val result = withContext(Dispatchers.Default) { repository.getRates() }
+        return@runBlocking result as ArrayList<RateClass>
+    }
+
+    /**
+     * parse response json and return code array
+     */
+    fun parseJson(response: String): ArrayList<RateClass> {
+        val rateCodeArray = ArrayList<RateClass>()
+        val jsonObject = JSONObject(response)
+        if (jsonObject.optString(Constants.RESULT, DEFAULT_VALUE) == Constants.SUCCESS) {
             deleteAll()
-            var rateObject = jsonObject.getJSONObject(CONVERSATION_RATES)
-            var keys = rateObject.keys()
+            val rateObject = jsonObject.getJSONObject(CONVERSATION_RATES)
+            val keys = rateObject.keys()
 
             while (keys.hasNext()) {
-                var keyValue = keys.next()
-                var rateCodeObject =
-                    RateClass(0, keyValue, rateObject.optDouble(keyValue, 0.0))
+                val keyValue = keys.next()
+                val rateCodeObject = RateClass(0, keyValue, rateObject.optDouble(keyValue, 0.0))
                 rateCodeArray.add(rateCodeObject)
             }
         }
         return rateCodeArray
     }
 
-    fun getMockCountryCode(activity: Activity): ArrayList<CurrencyClass> {
-        var currencyArray = JSONArray(Util.getAssetJsonData(activity))
-        var currencyArrayList = ArrayList<CurrencyClass>()
-        for (i in 0 until currencyArray.length()) {
-            val currencyObjects = currencyArray.getJSONObject(i)
-            var keys = currencyObjects.keys()
-            while (keys.hasNext()) {
-                var key = keys.next()
-                var currencyObject = currencyObjects.getJSONObject(key)
-                var currencyModel = CurrencyClass()
-                currencyModel.name = currencyObject.optString("name", DEFAULT_VALUE)
-                currencyModel.symbol = currencyObject.optString("symbol", DEFAULT_VALUE)
-                currencyModel.symbolNative =
-                    currencyObject.optString("symbol_native", DEFAULT_VALUE)
-                currencyModel.code = currencyObject.optString("code", DEFAULT_VALUE)
-                currencyModel.namePlural = currencyObject.optString("name_plural", DEFAULT_VALUE)
-                currencyArrayList.add(currencyModel)
+    /**
+     * on text changed method is called when user enter from amount
+     */
+    fun onAmountChanged(s: CharSequence, start: Int, before: Int, count: Int) {
+        try {
+            if (s != null && s.isNotEmpty() && getCode().isNotEmpty()) {
+                val toObject =
+                    getCode().find { it.code == uiModelClassObj.get()?.toCode.toString() }
+                val calculatedAmount = s.toString().toDouble() * toObject?.rate!!
+                fromInputText.set(Util.roundOffDecimal(calculatedAmount))
             }
+        } catch (e: NumberFormatException) {
+        } catch (e1: KotlinNullPointerException) {
+
         }
-        return currencyArrayList
     }
+
+    /**
+     * get From currency code from list
+     */
+    fun getFromCurrencyCode(context: Context) {
+        if (Util.verifyAvailableNetwork(context as AppCompatActivity)) {
+            NavigationUtil.pickCurrencyCode(context, FROM_CURRENCY_INPUT)
+        } else {
+            Toast.makeText(context as Activity,
+                context.resources.getString(R.string.network_connection),
+                Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    /**
+     * select To currency code from list
+     */
+    fun getToCurrencyCode(context: Context) {
+        NavigationUtil.pickCurrencyCode(context as AppCompatActivity, TO_CURRENCY_INPUT)
+    }
+
 }

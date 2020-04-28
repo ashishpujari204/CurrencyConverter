@@ -5,7 +5,6 @@ import android.graphics.Typeface
 import android.util.AttributeSet
 
 import androidx.appcompat.widget.AppCompatEditText
-import com.ashish.currencyconverter.util.Constants
 
 
 class CustomEditText : AppCompatEditText {

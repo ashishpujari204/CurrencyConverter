@@ -1,187 +1,217 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/background"
-    tools:context=".ui.home.CurrencyConverter">
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/homeToolbar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/colorPrimary"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
 
-        <RelativeLayout
+
+    <data>
+        <variable
+            name="viewModel"
+            type="com.ashish.currencyconverter.ui.home.CurrencyViewModel" />
+        <variable
+            name="uiClassObject"
+            type="com.ashish.currencyconverter.ui.home.UIModelClass" />
+    </data>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/background"
+        tools:context=".ui.home.CurrencyConverter">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/homeToolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:gravity="center_vertical">
+            android:background="@color/colorPrimary"
+            android:theme="@style/ThemeOverlay.AppCompat.Dark">
 
-
-            <TextView
-                android:layout_width="wrap_content"
+            <RelativeLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
                 android:layout_marginLeft="10dp"
-                android:text="@string/title"
-                android:fontFamily="@font/google_sans_regular"
+                android:gravity="center_vertical">
+
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="10dp"
+                    android:fontFamily="@font/google_sans_regular"
+                    android:text="@string/title"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:textColor="@color/white" />
+            </RelativeLayout>
+
+        </androidx.appcompat.widget.Toolbar>
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            style="?android:attr/progress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true" />
+
+        <LinearLayout
+            android:id="@+id/currencySelectionLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/homeToolbar"
+            android:layout_marginTop="20dp"
+            android:orientation="horizontal"
+            android:weightSum="3">
+
+            <LinearLayout
+                android:id="@+id/lyFromCurrencySelection"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_weight="1.4"
+                android:onClick="@{view -> viewModel.getFromCurrencyCode(context)}"
+                android:background="@drawable/button_rounded"
+                android:orientation="vertical"
+                android:paddingTop="5dp"
+                android:paddingBottom="5dp">
+
+                <TextView
+                    android:id="@+id/tvFromCode"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:text='@{viewModel.uiModelClassObj.fromCode}'
+                    android:fontFamily="@font/google_sans_regular"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:textColor="@color/white" />
+
+                <TextView
+                    android:id="@+id/tvFromRate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:fontFamily="@font/google_sans_regular"
+                    android:text='@{Double.toString(viewModel.uiModelClassObj.fromRate)}'
+                    android:textColor="@color/white"
+                    android:textSize="12dp" />
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/currencySwipeButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="0.2"
+                android:background="@drawable/ic_swipe"
+                android:padding="10dp"></ImageView>
+
+
+            <LinearLayout
+                android:id="@+id/lyToCurrencySelection"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_weight="1.4"
+                android:onClick="@{view -> viewModel.getToCurrencyCode(context)}"
+                android:background="@drawable/button_rounded"
+                android:orientation="vertical"
+                android:paddingTop="5dp"
+                android:paddingBottom="5dp">
+
+                <TextView
+                    android:id="@+id/tvToCode"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:fontFamily="@font/google_sans_regular"
+                    android:text='@{viewModel.uiModelClassObj.toCode}'
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:textColor="@color/white" />
+
+                <TextView
+                    android:id="@+id/tvToRate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:fontFamily="@font/google_sans_regular"
+                    android:textColor="@color/white"
+                    android:text='@{Double.toString(viewModel.uiModelClassObj.toRate)}'
+                    android:textSize="12dp" />
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/fromInputLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/currencySelectionLayout"
+            android:layout_marginTop="20dp"
+            android:orientation="vertical">
+
+            <com.ashish.currencyconverter.util.CustomEditText
+                android:id="@+id/tvFromInput"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:digits="0123456789."
+                android:gravity="center_horizontal"
+                android:onTextChanged="@{viewModel::onAmountChanged}"
+                android:text='@{Double.toString(viewModel.uiModelClassObj.editableRate)}'
+                android:inputType="numberDecimal"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                android:textColor="@color/white" />
-        </RelativeLayout>
+                android:textColor="@color/faint_read"
+                android:textColorHint="@color/faint_read" />
 
-    </androidx.appcompat.widget.Toolbar>
-    <LinearLayout
-        android:id="@+id/currencySelectionLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:weightSum="3"
-        android:layout_below="@+id/homeToolbar"
-        android:layout_marginTop="20dp"
-        android:orientation="horizontal">
-
-        <LinearLayout
-            android:id="@+id/lyFromCurrencySelection"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1.4"
-            android:paddingTop="5dp"
-            android:paddingBottom="5dp"
-            android:layout_marginRight="20dp"
-            android:layout_marginLeft="20dp"
-            android:background="@drawable/button_rounded"
-            android:orientation="vertical"
-            >
             <TextView
+                android:id="@+id/tvFromInputCode"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/tvFromCode"
-                android:text="@string/inr"
-                android:textColor="@color/white"
                 android:layout_gravity="center_horizontal"
                 android:fontFamily="@font/google_sans_regular"
-                android:textAppearance="@style/TextAppearance.AppCompat.Medium"/>
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/tvFromRate"
-                android:text="@string/inr_amount"
+                android:text='@{viewModel.uiModelClassObj.fromCode}'
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                 android:textColor="@color/white"
-                android:layout_gravity="center_horizontal"
-                android:fontFamily="@font/google_sans_regular"
-                android:textSize="12dp"/>
+                android:textStyle="bold" />
+
         </LinearLayout>
 
-        <ImageView
-            android:id="@+id/currencySwipeButton"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:padding="10dp"
-            android:layout_gravity="center_vertical"
-            android:layout_weight="0.2"
-            android:background="@drawable/ic_swipe"></ImageView>
-
-
-
         <LinearLayout
-            android:id="@+id/lyToCurrencySelection"
-            android:layout_width="0dp"
+            android:id="@+id/toInputLayout"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1.4"
-            android:paddingTop="5dp"
-            android:paddingBottom="5dp"
-            android:layout_marginRight="20dp"
-            android:layout_marginLeft="20dp"
-            android:background="@drawable/button_rounded"
-            android:orientation="vertical"
-            >
+            android:layout_below="@+id/fromInputLayout"
+            android:layout_marginTop="20dp"
+            android:orientation="vertical">
+
             <TextView
+                android:id="@+id/tvToInput"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:fontFamily="@font/google_sans_regular"
+                android:gravity="center_horizontal"
+                android:inputType="number"
+                android:text='@{Double.toString(viewModel.fromInputText)}'
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:textColor="@color/faint_read"
+                android:textColorHint="@color/faint_read"></TextView>
+
+            <TextView
+                android:id="@+id/tvToInputCode"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/tvToCode"
-                android:text="@string/usd"
-                android:textColor="@color/white"
                 android:layout_gravity="center_horizontal"
                 android:fontFamily="@font/google_sans_regular"
-                android:textAppearance="@style/TextAppearance.AppCompat.Medium"/>
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/tvToRate"
-                android:text="@string/usd_amount"
+                android:text='@{viewModel.uiModelClassObj.toCode}'
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                 android:textColor="@color/white"
-                android:layout_gravity="center_horizontal"
-                android:fontFamily="@font/google_sans_regular"
-                android:textSize="12dp"/>
+                android:textStyle="bold" />
+
         </LinearLayout>
-
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/fromInputLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:layout_below="@+id/currencySelectionLayout"
-        android:orientation="vertical">
-        <com.ashish.currencyconverter.util.CustomEditText
-            android:id="@+id/tvFromInput"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="20dp"
-            android:layout_marginLeft="20dp"
-            android:textColor="@color/faint_read"
-            android:gravity="center_horizontal"
-            android:digits="0123456789."
-            android:inputType="numberDecimal"
-            android:textColorHint="@color/faint_read"
-            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-            />
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/tvFromInputCode"
-            android:text="@string/usd"
-            android:textColor="@color/white"
-            android:layout_gravity="center_horizontal"
-            android:fontFamily="@font/google_sans_regular"
-            android:textStyle="bold"
-            android:textAppearance="@style/TextAppearance.AppCompat.Medium"/>
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/toInputLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:layout_below="@+id/fromInputLayout"
-        android:orientation="vertical">
-        <TextView
-            android:id="@+id/tvToInput"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="20dp"
-            android:layout_marginLeft="20dp"
-            android:text="@string/inr_amount"
-            android:textColor="@color/faint_read"
-            android:gravity="center_horizontal"
-            android:textColorHint="@color/faint_read"
-            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-            android:fontFamily="@font/google_sans_regular"
-            android:inputType="number"></TextView>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/tvToInputCode"
-            android:text="@string/inr"
-            android:textColor="@color/white"
-            android:layout_gravity="center_horizontal"
-            android:fontFamily="@font/google_sans_regular"
-            android:textStyle="bold"
-            android:textAppearance="@style/TextAppearance.AppCompat.Medium"/>
-
-    </LinearLayout>
-</RelativeLayout>
+    </RelativeLayout>
+</layout>

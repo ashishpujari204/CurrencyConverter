@@ -6,6 +6,7 @@ import com.ashish.currencyconverter.util.Constants
 
 class SharedPreferencesStorage(context: Context) : Storage {
 
+
     private val sharedPreferences = context.getSharedPreferences(Constants.PREFERANCE_NAME, Context.MODE_PRIVATE)
 
     override fun setString(key: String, value: String) {
