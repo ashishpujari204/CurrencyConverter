@@ -2,7 +2,8 @@ package com.ashish.currencyconverter.rest
 
 
 import com.google.gson.JsonObject
-import retrofit2.Call
+import kotlinx.coroutines.Deferred
+import retrofit2.Response
 import retrofit2.http.*
 
 interface ApiInterface {
@@ -10,6 +11,6 @@ interface ApiInterface {
     @GET("latest/{base}")
      fun getData(
         @Path("base") base: String?
-    ): Call<JsonObject>
+    ): Deferred<Response<JsonObject>>
 
 }

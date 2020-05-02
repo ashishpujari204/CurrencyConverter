@@ -25,11 +25,11 @@ val roomDatabaseModule = module {
 
     val repositoryModule = module {
         fun provideCurrencyRepo(apiInterface: ApiInterface,
-                                rateDAO: RateDAO): RepositoryImplementation {
-            return RepositoryImplementation(apiInterface, rateDAO)
+                                rateDAO: RateDAO,application: Application): RepositoryImplementation {
+            return RepositoryImplementation(apiInterface, rateDAO, application)
         }
 
-        single { provideCurrencyRepo(get(), get()) }
+        single { provideCurrencyRepo(get(), get(),androidApplication()) }
     }
     single { provideDatabase(androidApplication()) }
     single { provideDao(get()) }
