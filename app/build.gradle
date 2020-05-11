@@ -131,4 +131,7 @@ dependencies {
     implementation "org.koin:koin-android:$koin_version"
     implementation "org.koin:koin-android-architecture:0.9.1-alpha-5"
     androidTestImplementation "org.koin:koin-test:$koin_version"
+
+    //secure crypto
+    implementation "androidx.security:security-crypto:1.0.0-rc01"
 }
