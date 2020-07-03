@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">CurrencyConverter</string>
+    <string name="title">Currency Converter</string>
+    <string name="title_code">Select Currency</string>
+    <string name="selection_message">API is not support to selected currency code</string>
+    <string name="network_connection">Please check internet connection</string>
+</resources>

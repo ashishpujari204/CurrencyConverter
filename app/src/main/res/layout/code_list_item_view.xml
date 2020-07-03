@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+    <data>
+        <variable
+            name="currencyObject"
+            type="com.ashish.currencyconverter.ui.home.CurrencyClass" />
+    </data>
+<RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingTop="8dp"
+    android:paddingRight="8dp"
+    android:paddingBottom="8dp">
+
+    <TextView
+        android:id="@+id/tvCodeTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:fontFamily="@font/google_sans_regular"
+        android:textColor="@color/white"
+        android:text='@{currencyObject.code+" - "+currencyObject.name}'
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"></TextView>
+</RelativeLayout>
+</layout>
