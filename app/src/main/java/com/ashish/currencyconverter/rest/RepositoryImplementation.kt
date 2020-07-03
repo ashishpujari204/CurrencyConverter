@@ -13,13 +13,13 @@ import retrofit2.HttpException
 import java.net.SocketTimeoutException
 
 open class RepositoryImplementation(private var apiInterface: ApiInterface,
-                                    val rateDAO: RateDAO,
+                                    private val rateDAO: RateDAO,
                                     androidApplication: Application) {
 
     fun getCurrencyCodes(base: String): MutableLiveData<String> {
         val userData = MutableLiveData<String>()
         CoroutineScope(Dispatchers.Main + handler).launch {
-            val response = apiInterface.getData(base).await()
+            val response = apiInterface.getDataAsync(base).await()
             userData.value = response.body().toString()
             parseJson(response.body().toString(), rateDAO)
         }

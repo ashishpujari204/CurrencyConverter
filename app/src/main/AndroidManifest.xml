@@ -14,7 +14,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".ui.codelist.CurrencyCodeList"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar"/>
         <activity android:name=".ui.home.CurrencyConverter"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>

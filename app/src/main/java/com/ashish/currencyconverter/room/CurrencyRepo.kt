@@ -1,6 +1,5 @@
 package com.ashish.currencyconverter.room
 
-import androidx.lifecycle.LiveData
 import com.ashish.currencyconverter.ui.home.RateClass
 
 class CurrencyRepo(private val currencyDAO: RateDAO) {

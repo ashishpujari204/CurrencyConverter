@@ -22,6 +22,6 @@
         android:fontFamily="@font/google_sans_regular"
         android:textColor="@color/white"
         android:text='@{currencyObject.code+" - "+currencyObject.name}'
-        android:textAppearance="@style/TextAppearance.AppCompat.Medium"></TextView>
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"/>
 </RelativeLayout>
 </layout>

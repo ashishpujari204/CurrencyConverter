@@ -9,7 +9,7 @@ import retrofit2.http.*
 interface ApiInterface {
 
     @GET("latest/{base}")
-     fun getData(
+     fun getDataAsync(
         @Path("base") base: String?
     ): Deferred<Response<JsonObject>>
 

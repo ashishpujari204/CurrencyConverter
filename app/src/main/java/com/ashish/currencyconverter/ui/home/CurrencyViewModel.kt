@@ -26,7 +26,7 @@ import org.json.JSONObject
 
 
 open class CurrencyViewModel(private val repositoryImplementation: RepositoryImplementation,
-                             private val rateDAO: RateDAO) : ViewModel() {
+                             rateDAO: RateDAO) : ViewModel() {
 
 
     private val repository: CurrencyRepo = CurrencyRepo(rateDAO)
@@ -98,7 +98,6 @@ open class CurrencyViewModel(private val repositoryImplementation: RepositoryImp
             }
         } catch (e: NumberFormatException) {
         } catch (e1: KotlinNullPointerException) {
-
         }
     }
 
