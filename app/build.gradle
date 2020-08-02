@@ -17,7 +17,12 @@ android {
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
+    buildFeatures {
 
+        dataBinding true
+        // for view binding:
+        // viewBinding true
+    }
     buildTypes {
         release {
             minifyEnabled true
@@ -27,14 +32,15 @@ android {
         }
         debug {
             minifyEnabled false
+            testCoverageEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             buildConfigField "String", 'API_KEY', (project.findProperty("KEY") ?: "")
             buildConfigField "String", 'BASE_URL', "\"https://prime.exchangerate-api.com/v5/\""
         }
     }
-    dataBinding {
+    /*dataBinding {
         enabled = true
-    }
+    }*/
     compileOptions {
         sourceCompatibility = 1.8
         targetCompatibility = 1.8
@@ -46,34 +52,33 @@ android {
         resolutionStrategy.force 'com.google.code.findbugs:jsr305:2.0.1'
     }
 
-    buildToolsVersion = '28.0.3'
+    buildToolsVersion = '29.0.3'
 }
-kapt {
+/*kapt {
     generateStubs = true
     correctErrorTypes = true
-}
+}*/
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation 'androidx.appcompat:appcompat:1.1.0'
-    implementation 'androidx.core:core-ktx:1.2.0'
-    implementation 'com.google.android.material:material:1.0.0'
+    implementation 'androidx.core:core-ktx:1.3.1'
+    implementation 'com.google.android.material:material:1.1.0'
     implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
-    testImplementation 'junit:junit:4.12'
-    implementation 'junit:junit:4.12'
+    testImplementation 'junit:junit:4.13'
+    implementation 'junit:junit:4.13'
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
-    androidTestImplementation 'androidx.test:runner:1.1.1'
+    androidTestImplementation 'androidx.test:runner:1.2.0'
     //android x
-    implementation 'androidx.annotation:annotation:1.1.0'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
 
     //retrofit
     implementation 'com.google.code.gson:gson:2.8.6'
     implementation "com.squareup.retrofit2:retrofit:$retrofit_version"
     implementation "com.squareup.retrofit2:converter-gson:$retrofit_version"
-    implementation 'com.squareup.okhttp3:logging-interceptor:4.3.0'
+    implementation 'com.squareup.okhttp3:logging-interceptor:4.8.0'
 
     //coroutines
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutine_version"
@@ -107,18 +112,17 @@ dependencies {
 
     //mockito
     testImplementation 'org.mockito:mockito-inline:2.13.0'
-    testImplementation 'com.nhaarman.mockitokotlin2:mockito-kotlin:2.0.0-RC3'
-    androidTestImplementation 'androidx.test:rules:1.1.1'
-    androidTestImplementation 'androidx.test.ext:truth:1.1.0'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.0'
-    androidTestImplementation 'com.google.code.findbugs:jsr305:2.0.1'
+    testImplementation 'com.nhaarman.mockitokotlin2:mockito-kotlin:2.2.0'
+    androidTestImplementation 'androidx.test:rules:1.2.0'
+    androidTestImplementation 'androidx.test.ext:truth:1.2.0'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.1'
+    androidTestImplementation 'com.google.code.findbugs:jsr305:3.0.2'
     testImplementation 'org.mockito:mockito-core:2.24.5'
     // required if you want to use Mockito for Android tests
     androidTestImplementation 'org.mockito:mockito-android:2.24.5'
-    androidTestImplementation 'org.mockito:mockito-android:2.12.0'
     // optional - Test helpers for LiveData
     testImplementation 'androidx.arch.core:core-testing:2.1.0'
-    androidTestImplementation('com.android.support.test.espresso:espresso-contrib:2.0') {
+    androidTestImplementation('com.android.support.test.espresso:espresso-contrib:3.0.2') {
         exclude group: 'com.android.support', module: 'appcompat'
         exclude group: 'com.android.support', module: 'support-v4'
         exclude module: 'recyclerview-v7'
@@ -133,5 +137,5 @@ dependencies {
     androidTestImplementation "org.koin:koin-test:$koin_version"
 
     //secure crypto
-    implementation "androidx.security:security-crypto:1.0.0-rc01"
+    implementation 'androidx.security:security-crypto:1.1.0-alpha01'
 }

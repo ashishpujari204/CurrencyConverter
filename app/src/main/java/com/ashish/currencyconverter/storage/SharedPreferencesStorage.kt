@@ -12,7 +12,7 @@ class SharedPreferencesStorage(context: Context) : Storage {
     var masterKeyAlias: String = MasterKeys.getOrCreate(MasterKeys.AES256_GCM_SPEC)
 
     private var sharedPreferences: SharedPreferences =
-        EncryptedSharedPreferences.create(Constants.PREFERANCE_NAME,
+        EncryptedSharedPreferences.create(Constants.PERFERENCES_NAME,
             masterKeyAlias,
             context,
             EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
