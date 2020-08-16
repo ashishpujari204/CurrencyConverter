@@ -2,6 +2,7 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
+apply from: '../dependencies.gradle'
 android {
     compileSdkVersion 29
     buildToolsVersion "29.0.1"
@@ -18,10 +19,7 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     buildFeatures {
-
         dataBinding true
-        // for view binding:
-        // viewBinding true
     }
     buildTypes {
         release {
@@ -38,9 +36,7 @@ android {
             buildConfigField "String", 'BASE_URL', "\"https://prime.exchangerate-api.com/v5/\""
         }
     }
-    /*dataBinding {
-        enabled = true
-    }*/
+
     compileOptions {
         sourceCompatibility = 1.8
         targetCompatibility = 1.8
@@ -51,13 +47,9 @@ android {
     configurations.all {
         resolutionStrategy.force 'com.google.code.findbugs:jsr305:2.0.1'
     }
-
     buildToolsVersion = '29.0.3'
 }
-/*kapt {
-    generateStubs = true
-    correctErrorTypes = true
-}*/
+
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
@@ -138,4 +130,17 @@ dependencies {
 
     //secure crypto
     implementation 'androidx.security:security-crypto:1.1.0-alpha01'
+    /*
+     implementation basic.values()
+    implementation androidX.values()
+    implementation retrofit.values()
+    implementation ktxCore.values()
+    implementation room.values()
+    implementation lifeCycleCore.values()
+    implementation kotinComponents.values()
+    implementation facebookStetho.values()
+    implementation mockitoTesting.values()
+    implementation koin.values()
+    implementation sharedCrypto.values()
+     */
 }

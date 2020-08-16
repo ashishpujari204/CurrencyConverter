@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="colorPrimary">#48494B</color>
+    <color name="colorPrimaryDark">#48494B</color>
+    <color name="colorAccent">#48494B</color>
+
+    <!--#F57C00 -->
+    <color name="white">#FF0266</color>
+    <color name="faint_read">#ffffff</color>
+    <color name="faint_grey">#363636</color>
+    <color name="background">#48494B</color>
+</resources>
