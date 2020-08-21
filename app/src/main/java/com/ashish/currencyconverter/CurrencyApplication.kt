@@ -14,7 +14,7 @@ class CurrencyApplication : Application() {
         Stetho.initializeWithDefaults(this)
         startKoin {
             androidContext(this@CurrencyApplication)
-            androidLogger(Level.DEBUG)
+            androidLogger(Level.ERROR)
             modules(listOf(viewModelModule,
                 retrofitModule,
                 roomDatabaseModule,

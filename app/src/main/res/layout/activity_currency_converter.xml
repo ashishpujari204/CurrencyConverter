@@ -49,7 +49,8 @@
             style="?android:attr/progress"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-
+            android:progressTint="@color/progress_color"
+            android:progressBackgroundTint="@color/progress_color"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true" />
 

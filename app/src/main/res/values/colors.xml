@@ -7,6 +7,7 @@
 
     <!--#F57C00 -->
     <color name="white">#ffffff</color>
+    <color name="progress_color">#FF0266</color>
     <color name="faint_read">#FF0266</color>
     <color name="faint_grey">#363636</color>
     <color name="background">#48494B</color>
